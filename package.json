@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/Benjadahl/BenjaMath-Web/issues"
   },
-  "homepage": "https://github.com/Benjadahl/BenjaMath-Web#readme"
+  "homepage": "https://github.com/Benjadahl/BenjaMath-Web#readme",
+  "devDependencies": {
+    "algebrite": "^1.0.2",
+    "browserify": "^14.3.0"
+  }
 }
