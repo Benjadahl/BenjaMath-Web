@@ -1,0 +1,16 @@
+#mainContainer {
+  display: flex;
+}
+
+#editorContainer {
+  width: 50%;
+  margin-right: 15px;
+}
+
+#previewContainer {
+  flex-grow: 1;
+}
+
+.header {
+  font-family: sans-serif;
+}

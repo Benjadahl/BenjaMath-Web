@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/Benjadahl/BenjaMath-Web#readme",
   "devDependencies": {
+    "algebra.js": "^0.2.6",
     "algebrite": "^1.0.2",
     "browserify": "^14.3.0",
+    "ckeditor": "^4.6.2",
+    "jquery": "^3.2.1",
     "katex": "^0.7.1"
   }
 }
