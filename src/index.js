@@ -4,6 +4,9 @@ window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
 require("ckeditor");
 var $ = require("jquery");
 var algebra = require("algebra.js");
+var math = require("mathjs");
+
+console.log(math);
 
 console.log("Welcome to BenjaMath");
 
@@ -27,15 +30,13 @@ function renderPreview (element) {
   var eData = CKEDITOR.instances.editor.getData();
   var data = parser.parseFromString(eData, "text/html");
   var mathTags = data.getElementsByTagName("em");
-
-  console.log(mathTags);
-
   while (mathTags.length > 0) {
-    console.log("tagging");
+    console.log("Evaluating");
     let element = mathTags[0];
-    console.log(algebrite.eval(element.innerHTML));
-    let mathResult = algebrite.eval(element.innerHTML).toString();
-    let replaceString = katex.renderToString(algebra.toTex(algebra.parse(mathResult)));
+    console.log(algebrite.eval(element.innerHTML).toString());
+    let rs = math.parse(algebrite.eval(element.innerHTML).toString()).toTex();
+    let ls = math.parse(element.innerHTML).toTex();
+    let replaceString = katex.renderToString(ls + "=" + rs);
     $(element).replaceWith(replaceString);
   }
 

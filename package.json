@@ -25,6 +25,7 @@
     "browserify": "^14.3.0",
     "ckeditor": "^4.6.2",
     "jquery": "^3.2.1",
-    "katex": "^0.7.1"
+    "katex": "^0.7.1",
+    "mathjs": "^3.11.5"
   }
 }
