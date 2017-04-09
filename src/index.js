@@ -5,8 +5,7 @@ require("ckeditor");
 var $ = require("jquery");
 var algebra = require("algebra.js");
 var math = require("mathjs");
-
-console.log(math);
+var stringToLatex = require("./stringToLatex.js");
 
 console.log("Welcome to BenjaMath");
 
