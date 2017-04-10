@@ -9,6 +9,8 @@ var stringToLatex = require("./stringToLatex.js");
 
 console.log("Welcome to BenjaMath");
 
+console.log(stringToLatex("-1/2 (b^2 / (a^2) - 4 c / a)^(1/2) - b / (2 a)^(3*(4+9))"));
+
 CKEDITOR.replace("editor");
 
 
@@ -34,7 +36,13 @@ function renderPreview (element) {
     let element = mathTags[0];
     console.log(algebrite.eval(element.innerHTML).toString());
     let rs = math.parse(algebrite.eval(element.innerHTML).toString()).toTex();
-    let ls = math.parse(element.innerHTML).toTex();
+    let ls;
+    try {
+      ls = math.parse(element.innerHTML).toTex();
+    } catch (err) {
+      ls = element.innerHTML;
+    }
+
     let replaceString = katex.renderToString(ls + "=" + rs);
     $(element).replaceWith(replaceString);
   }
