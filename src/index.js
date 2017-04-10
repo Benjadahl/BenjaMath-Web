@@ -35,10 +35,10 @@ function renderPreview (element) {
     console.log("Evaluating");
     let element = mathTags[0];
     console.log(algebrite.eval(element.innerHTML).toString());
-    let rs = math.parse(algebrite.eval(element.innerHTML).toString()).toTex();
+    let rs = stringToLatex(algebrite.eval(element.innerHTML).toString());
     let ls;
     try {
-      ls = math.parse(element.innerHTML).toTex();
+      ls = stringToLatex(element.innerHTML);
     } catch (err) {
       ls = element.innerHTML;
     }
