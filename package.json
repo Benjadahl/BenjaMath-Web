@@ -26,6 +26,7 @@
     "ckeditor": "^4.6.2",
     "jquery": "^3.2.1",
     "katex": "^0.7.1",
-    "mathjs": "^3.11.5"
+    "mathjs": "^3.11.5",
+    "mathquill": "^0.10.1-a"
   }
 }

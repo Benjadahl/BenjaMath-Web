@@ -2,10 +2,16 @@ var algebrite = require("algebrite");
 var katex = require("katex");
 window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
 require("ckeditor");
-var $ = require("jquery");
 var algebra = require("algebra.js");
 var math = require("mathjs");
 var stringToLatex = require("./stringToLatex.js");
+
+$(window).on("load", function(){
+  var MQ = MathQuill.getInterface(2);
+  var mathquillTest = document.getElementById("mathquillTest");
+  MQ.MathField(mathquillTest);
+});
+
 
 console.log("Welcome to BenjaMath");
 
@@ -35,7 +41,7 @@ function renderPreview (element) {
     console.log("Evaluating");
     let element = mathTags[0];
     console.log(algebrite.eval(element.innerHTML).toString());
-    let rs = stringToLatex(algebrite.eval(element.innerHTML).toString());
+    let rs = stringToLatex(algebrite.eval(element.innerHTML));
     let ls;
     try {
       ls = stringToLatex(element.innerHTML);
