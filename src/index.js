@@ -23,7 +23,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = 'Mq' + MqCount;
-      editor.insertHtml( '<p contenteditable="false">&#8291<span id="' + id + '" contenteditable="false">placeholder</span></p><p></p>' );
+      editor.insertHtml( '<p contenteditable="false">&#8291<span id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
       {
@@ -62,14 +62,14 @@ $(document).ready(function () {
     toolbar: 'insert'
   });
 
-  /*let previewElement = document.getElementById("preview");
+  let previewElement = document.getElementById("preview");
   editor.on("change", function() {
     renderPreview(previewElement);
   });
 
   editor.on("instanceReady", function() {
     renderPreview(previewElement);
-  });*/
+  });
 });
 
 
@@ -83,7 +83,10 @@ function renderPreview (element) {
 
   for (var i = 0; i < MathQuills.length; i++) {
     let latex = MathQuills[i].latex();
+    console.log($(MathQuills[i].el()).parent().children().last().html());
+
     let stringMath = new AlgebraLatex(latex).toMath();
+    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(stringMath).toString()); 
     console.log(algebrite.eval(stringMath).toString());
   }
 
