@@ -16,6 +16,18 @@ console.log("Welcome to BenjaMath");
 var MathQuills = [];
 var MqCount = 0;
 
+/*
+  BUTTON EVENT
+*/
+document.getElementById("printButton").addEventListener("click", function(){
+  $("#mainContainer").hide();
+  let previewContent = $("#preview").html();
+  $("body").append("<div id='printContent'>" + previewContent + "</div>");
+  window.print();
+  $("#printContent").remove();
+  $("#mainContainer").show();
+});
+
 //Modify editor
 CKEDITOR.config.allowedContent = true;
 $(document).ready(function () {
@@ -86,7 +98,7 @@ function renderPreview (element) {
     console.log($(MathQuills[i].el()).parent().children().last().html());
 
     let stringMath = new AlgebraLatex(latex).toMath();
-    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(stringMath).toString()); 
+    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(stringMath).toString());
     console.log(algebrite.eval(stringMath).toString());
   }
 

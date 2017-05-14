@@ -5,6 +5,7 @@
 #editorContainer {
   width: 50%;
   margin-right: 15px;
+  margin-left: -125px;
 }
 
 #previewContainer {
@@ -13,4 +14,8 @@
 
 .header {
   font-family: sans-serif;
+}
+
+#buttons {
+  display: inline;
 }
