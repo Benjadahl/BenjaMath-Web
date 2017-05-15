@@ -13,3 +13,9 @@
 #buttons {
   display: inline;
 }
+
+#editor {
+  border: solid 1px grey;
+  padding-left:10px;
+  height: 80vh;
+}
