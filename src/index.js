@@ -68,13 +68,24 @@ $(document).ready(function () {
     }
   });
 
+  editor.addCommand( 'insertMathSection', {
+    exec: function( editor ) {
+      editor.insertHtml("<h5 class='math'>Script here<span contenteditable='false'> = null</span></h5>");
+    }
+  });
+
   editor.ui.addButton("mathQuill", {
     label: "Insert Equation",
     command: 'insertMathquill',
     toolbar: 'insert'
   });
 
-  let previewElement = document.getElementById("preview");
+  editor.ui.addButton("mathSection", {
+    label: "New Math Section",
+    command: 'insertMathSection',
+    toolbar: 'insert'
+  });
+
   editor.on("change", function() {
     renderPreview();
   });
@@ -87,9 +98,45 @@ $(document).ready(function () {
 parser = new DOMParser();
 
 function renderPreview () {
+  var eData = CKEDITOR.instances.editor.getData();
+  var mathTags = document.getElementsByClassName("math");
+  for (var i = 0; i < mathTags.length; i++) {
+    let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
+    let mathEvaluated = algebrite.eval(scriptingText).toString();
+    $(mathTags[i]).children().last().html(" = " + mathEvaluated);
+  }
+
   for (var i = 0; i < MathQuills.length; i++) {
     let latex = MathQuills[i].latex();
-    let stringMath = new AlgebraLatex(latex).toMath();
-    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(stringMath).toString());
+    let result;
+
+    //Check for it being an Algebrite command
+    if (latex[0] === "@") {
+      console.log("yay");
+      let depth = 0;
+      let startPos;
+      let endPos;
+      for (j = 0; j < latex.length; j++) {
+        if (latex[j] === "(") {
+          startPos = j + 1;
+          depth++;
+        } else if (latex[j] === ")") {
+          if (depth === 1) {
+            //-6 because of the end being \right)
+            endPos = j - 6;
+            break;
+          } else {
+            depth--;
+          }
+        }
+      }
+      let stringMath = new AlgebraLatex(latex.substring(startPos, endPos)).toMath();
+      result = latex.substring(1, startPos - 6) + "(" + stringMath + ")";
+      console.log(result);
+    } else {
+      result = new AlgebraLatex(latex).toMath();
+    }
+    console.log(result);
+    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(result).toString());
   }
 }
