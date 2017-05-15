@@ -35,7 +35,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = 'Mq' + MqCount;
-      editor.insertHtml( '<p contenteditable="false">&#8291<span id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
+      editor.insertHtml( '<span class="mathQuill" id="' + id + '" contenteditable="false">placeholder</span>' );
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
       {
@@ -104,6 +104,7 @@ function renderPreview () {
     let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
     let mathEvaluated = algebrite.eval(scriptingText).toString();
     $(mathTags[i]).children().last().html(" = " + mathEvaluated);
+    console.log($(mathTags[i]).children().find(".MathQuill").attr("data-test"));
   }
 
   for (var i = 0; i < MathQuills.length; i++) {
@@ -132,11 +133,12 @@ function renderPreview () {
       }
       let stringMath = new AlgebraLatex(latex.substring(startPos, endPos)).toMath();
       result = latex.substring(1, startPos - 6) + "(" + stringMath + ")";
-      console.log(result);
+      $(MathQuills[i].el()).attr("data-test", result);
+      //console.log(result);
     } else {
       result = new AlgebraLatex(latex).toMath();
     }
-    console.log(result);
-    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(result).toString());
+    //console.log(result);
+    //$(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(result).toString());
   }
 }
