@@ -1,15 +1,9 @@
-#mainContainer {
-  display: flex;
-}
-
 #editorContainer {
-  width: 50%;
-  margin-right: 15px;
-  margin-left: -125px;
+  margin-top: -50px;
 }
 
-#previewContainer {
-  flex-grow: 1;
+#editor {
+  margin-top: 75px;
 }
 
 .header {

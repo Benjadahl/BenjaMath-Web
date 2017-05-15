@@ -21,8 +21,8 @@ var MqCount = 0;
 */
 document.getElementById("printButton").addEventListener("click", function(){
   $("#mainContainer").hide();
-  let previewContent = $("#preview").html();
-  $("body").append("<div id='printContent'>" + previewContent + "</div>");
+  let editorContent = CKEDITOR.instances.editor.getData();
+  $("body").append("<div id='printContent'>" + editorContent + "</div>");
   window.print();
   $("#printContent").remove();
   $("#mainContainer").show();
@@ -76,47 +76,20 @@ $(document).ready(function () {
 
   let previewElement = document.getElementById("preview");
   editor.on("change", function() {
-    renderPreview(previewElement);
+    renderPreview();
   });
 
   editor.on("instanceReady", function() {
-    renderPreview(previewElement);
+    renderPreview();
   });
 });
 
-
-
 parser = new DOMParser();
 
-function renderPreview (element) {
-  var eData = CKEDITOR.instances.editor.getData();
-  var data = parser.parseFromString(eData, "text/html");
-  //var mathTags = data.getElementsByClassName("math");
-
+function renderPreview () {
   for (var i = 0; i < MathQuills.length; i++) {
     let latex = MathQuills[i].latex();
-    console.log($(MathQuills[i].el()).parent().children().last().html());
-
     let stringMath = new AlgebraLatex(latex).toMath();
     $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(stringMath).toString());
-    console.log(algebrite.eval(stringMath).toString());
   }
-
-  /*while (mathTags.length > 0) {
-    console.log("Evaluating");
-    let element = mathTags[0];
-    console.log(algebrite.eval(element.innerHTML).toString());
-    let rs = algebrite.eval(element.innerHTML);
-    let ls = element.innerHTML;
-    try {
-      ls = stringToLatex(element.innerHTML);
-    } catch (err) {
-      ls = element.innerHTML;
-    }
-
-    let replaceString = katex.renderToString(ls + "=" + rs);
-    $(element).replaceWith(replaceString);
-  }*/
-
-  element.innerHTML = data.getElementsByTagName("body")[0].innerHTML;
 }
