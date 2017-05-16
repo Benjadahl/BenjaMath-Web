@@ -137,10 +137,26 @@ $(document).ready(function () {
             let latex = mathQuill.latex();
             let mathString = RMC.parseLatex(latex);
             let resultElement = $(this).parent().children().last();
+            let variable;
             switch (key) {
+              case "simplify":
+                $(resultElement).html(" = " + RMC.simplify(mathString));
+                break;
               case "solve":
-                let variable = prompt("Solve for variable: ","x");
+                variable = prompt("Solve for variable: ","x");
                 $(resultElement).html(" = " + RMC.solve(mathString, variable));
+                break;
+              case "fsolve":
+                variable = prompt("Solve for variable: ","x");
+                $(resultElement).html(" = " + RMC.fsolve(mathString, variable));
+                break;
+              case "factor":
+                $(resultElement).html(" = " + RMC.factor(mathString));
+                break;
+              case "integral":
+                variable = prompt("Integrate with respect to varibale: ", "x");
+                console.log(variable);
+                $(resultElement).html(" = " + RMC.fsolve(mathString, variable));
                 break;
             }
           },

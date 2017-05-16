@@ -15,8 +15,24 @@ function updateVariablesTable() {
 }
 
 /* DEFAULT MATH FUNCTIONS */
+function simplify (expr) {
+	return algebrite.simplify(expr).toString();
+}
+
 function solve (eq, variable) {
 	return algebrite.roots(eq, variable).toString();
+}
+
+function fsolve (eq, variable) {
+	return algebrite.nroots(eq, variable).toString();
+}
+
+function factor (expr) {
+	return algebrite.factor(expr).toString();
+}
+
+function integral (expr, variable) {
+	return algebrite.integral(expr, variable).toString();
 }
 
 //Converts a latex string to regular math string
@@ -99,4 +115,4 @@ function evalMath(mathString) {
 
 
 updateVariablesTable();
-module.exports = { evalMath, solve, parseLatex };
+module.exports = { evalMath, simplify, solve, fsolve, factor, integral, parseLatex };
