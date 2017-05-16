@@ -160,7 +160,7 @@ parser = new DOMParser();
 function renderMathBox(id) {
 	console.log("MQ:", MQ(document.getElementById(id)).latex());
 	let latex = MQ(document.getElementById(id)).latex();
-	$("#" + id).parent().children().last().html(' = ' + rendalMathCore.evalMath(latex));
+	$("#" + id).parent().children().last().html(rendalMathCore.evalMath(latex));
 
 }
 
