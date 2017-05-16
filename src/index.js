@@ -6,6 +6,7 @@ var algebra = require("algebra.js");
 var math = require("mathjs");
 var stringToLatex = require("./stringToLatex.js");
 var rendalMathCore = require("./RendalMathCore.js");
+const AlgebraLatex = require('algebra-latex');
 
 var MQ = MathQuill.getInterface(2);
 
@@ -59,7 +60,7 @@ $(document).ready(function () {
   var editor = CKEDITOR.instances.editor;
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
-      let id = 'Mq' + MqCount;
+      let id = MqCount;
       editor.insertHtml( '<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
@@ -132,11 +133,14 @@ $(document).ready(function () {
           selector: '.mathField',
           callback: function(key, options) {
             console.log(this);
+            let mathQuill = MathQuills[$(this).attr("id")];
+            let latex = mathQuill.latex();
+            let mathString = new AlgebraLatex(latex).toMath();
+            console.log(latex);
             let resultElement = $(this).parent().children().last();
             switch (key) {
               case "solve":
-                $(resultElement).html("solve");
-                console.log("test");
+                $(resultElement).html(" = " + algebrite.roots(mathString).toString());
                 break;
             }
           },
