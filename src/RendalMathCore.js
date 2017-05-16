@@ -32,7 +32,14 @@ function evalMath(mathString) {
 		result = new AlgebraLatex(latex).toMath();
 	}
 
-	return algebrite.eval(result).toString();
+	let evalResult = "";
+	try {
+		evalResult = algebrite.eval(result).toString();
+	} catch (exception) {
+		evalResult = exception.toString();
+	}
+
+	return evalResult;
 }
 
 module.exports = { evalMath };

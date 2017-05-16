@@ -67,6 +67,13 @@ $(document).ready(function () {
           }
         }
       }).select().focus());
+
+			$("#" + id).keydown(function(e) {
+				if (e.keyCode == 13) {
+					let id = e.currentTarget.id;
+					renderMathBox(id);
+				}
+			});
       //Pretty bad hack - it makes the box editable and empty
       let currentQuill = MathQuills[MathQuills.length - 1];
       setTimeout(function(){
@@ -119,17 +126,19 @@ $(document).ready(function () {
 
 parser = new DOMParser();
 
-function renderPreview () {
-  var eData = CKEDITOR.instances.editor.getData();
-  var mathTags = document.getElementsByClassName("math");
-  for (var i = 0; i < mathTags.length; i++) {
-    let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
-    let mathEvaluated = algebrite.eval(scriptingText).toString();
-    $(mathTags[i]).children().last().html(" = " + mathEvaluated);
-  }
+function renderMathBox(id) {
+	console.log("MQ:", MQ(document.getElementById(id)).latex());
+	let latex = MQ(document.getElementById(id)).latex();
+	$("#" + id).parent().children().last().html(' = ' + rendalMathCore.evalMath(latex));
 
-  for (var i = 0; i < MathQuills.length; i++) {
-    let latex = MathQuills[i].latex();
-    $(MathQuills[i].el()).parent().children().last().html(' = ' + rendalMathCore.evalMath(latex));
-  }
+}
+
+function renderPreview () {
+	var eData = CKEDITOR.instances.editor.getData();
+	var mathTags = document.getElementsByClassName("math");
+	for (var i = 0; i < mathTags.length; i++) {
+		let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
+		let mathEvaluated = algebrite.eval(scriptingText).toString();
+		$(mathTags[i]).children().last().html(" = " + mathEvaluated);
+	}
 }
