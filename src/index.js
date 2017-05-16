@@ -9,6 +9,9 @@ const AlgebraLatex = require("algebra-latex");
 
 var MQ = MathQuill.getInterface(2);
 
+
+
+
 console.log("Welcome to BenjaMath");
 
 //console.log(stringToLatex("-1/2 (b^2 / (a^2) - 4 c / a)^(1/2) - b / (2 a)^(3*(4+9))"));
@@ -57,7 +60,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = 'Mq' + MqCount;
-      editor.insertHtml( '<p contenteditable="false">&#8291<span id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
+      editor.insertHtml( '<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
       {
@@ -114,6 +117,30 @@ $(document).ready(function () {
 
   editor.on("instanceReady", function() {
     renderPreview();
+  });
+
+  //Set up custom contextMenu for the mathfields
+  $(function() {
+      $.contextMenu({
+          selector: '.mathField',
+          callback: function(key, options) {
+            console.log(this);
+            let resultElement = $(this).parent().children().last();
+            switch (key) {
+              case "solve":
+                $(resultElement).html("solve");
+                console.log("test");
+                break;
+            }
+          },
+          items: {
+              "simplify": {name: "Simplify", icon: "fa-pie-chart"},
+              "solve": {name: "Solve", icon: "fa-asterisk"},
+              "fsolve": {name: "Fsolve", icon: "fa-cogs"},
+              "factor": {name: "Factor", icon: "fa-plus-square-o"},
+              "integral": {name: "Integral", icon: "fa-line-chart"}
+          }
+      });
   });
 });
 
