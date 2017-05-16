@@ -7,6 +7,13 @@ var variables = {
 	tau: "pi\\cdot2",
 };
 
+function updateVariablesTable() {
+	$("table > tbody").html("");
+	for (variable in variables) {
+		$("table > tbody").append("<tr><td>" + variable + "</td><td>" + variables[variable] + "</td></tr>");
+	}
+}
+
 
 function evalMath(mathString) {
 	let latex = mathString;
@@ -65,6 +72,7 @@ function evalMath(mathString) {
 		if (toSet !== null) {
 			evalResult = " " + toSet + ":=" + algebrite.eval(result).toString();
 			variables[toSet] = algebrite.eval(result).toString();
+			updateVariablesTable();
 		} else {
 			evalResult = " = " + algebrite.eval(result).toString();
 		}

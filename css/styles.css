@@ -19,3 +19,12 @@
   padding-left:10px;
   height: 78vh;
 }
+
+div#variables {
+	width: 15%;
+	margin-top: 5%;
+	float: left;
+}
+div#editorThing {
+	margin-left: 15%;
+}
