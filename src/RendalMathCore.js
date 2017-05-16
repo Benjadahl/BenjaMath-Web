@@ -86,4 +86,5 @@ function evalMath(mathString) {
 	return evalResult;
 }
 
+updateVariablesTable();
 module.exports = { evalMath };
