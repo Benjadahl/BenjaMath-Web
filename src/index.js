@@ -109,13 +109,15 @@ $(document).ready(function () {
   editor.ui.addButton("mathQuill", {
     label: "Insert Equation",
     command: 'insertMathquill',
-    toolbar: 'insert'
+    toolbar: 'insert',
+		label: "EQ"
   });
 
   editor.ui.addButton("mathSection", {
     label: "New Math Section",
     command: 'insertMathSection',
-    toolbar: 'insert'
+    toolbar: 'insert',
+		label: "CODE"
   });
 
   editor.on("change", function() {
@@ -158,7 +160,7 @@ parser = new DOMParser();
 function renderMathBox(id) {
 	console.log("MQ:", MQ(document.getElementById(id)).latex());
 	let latex = MQ(document.getElementById(id)).latex();
-	$("#" + id).parent().children().last().html(rendalMathCore.evalMath(latex));
+	$("#" + id).parent().children().last().html(RMC.evalMath(latex));
 
 }
 
