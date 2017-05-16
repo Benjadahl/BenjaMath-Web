@@ -67,7 +67,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MqCount;
-      editor.insertHtml( '<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>test</span></p><p></p>' );
+      editor.insertHtml( '<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>&nbsp;</span></p><p></p>' );
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
       {
