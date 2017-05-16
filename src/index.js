@@ -126,7 +126,6 @@ function renderPreview () {
     let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
     let mathEvaluated = algebrite.eval(scriptingText).toString();
     $(mathTags[i]).children().last().html(" = " + mathEvaluated);
-    console.log($(mathTags[i]).children().find(".MathQuill").attr("data-test"));
   }
 
   for (var i = 0; i < MathQuills.length; i++) {
@@ -155,12 +154,9 @@ function renderPreview () {
       }
       let stringMath = new AlgebraLatex(latex.substring(startPos, endPos)).toMath();
       result = latex.substring(1, startPos - 6) + "(" + stringMath + ")";
-      $(MathQuills[i].el()).attr("data-test", result);
-      //console.log(result);
     } else {
       result = new AlgebraLatex(latex).toMath();
     }
-    //console.log(result);
     $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(result).toString());
   }
 }
