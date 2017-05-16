@@ -7,6 +7,13 @@ var variables = {
 	tau: "pi\\cdot2",
 };
 
+function updateVariablesTable() {
+	$("table > tbody").html("");
+	for (variable in variables) {
+		$("table > tbody").append("<tr><td>" + variable + "</td><td>" + variables[variable] + "</td></tr>");
+	}
+}
+
 /* DEFAULT MATH FUNCTIONS */
 function solve (eq, variable) {
 	return algebrite.roots(eq, variable).toString();
@@ -16,6 +23,8 @@ function solve (eq, variable) {
 function parseLatex (latex) {
 	return new AlgebraLatex(latex).toMath();
 }
+
+
 
 function evalMath(mathString) {
 	let latex = mathString;
@@ -74,6 +83,7 @@ function evalMath(mathString) {
 		if (toSet !== null) {
 			evalResult = " " + toSet + ":=" + algebrite.eval(result).toString();
 			variables[toSet] = algebrite.eval(result).toString();
+			updateVariablesTable();
 		} else {
 			evalResult = " = " + algebrite.eval(result).toString();
 		}
@@ -87,4 +97,6 @@ function evalMath(mathString) {
 	return evalResult;
 }
 
+
+updateVariablesTable();
 module.exports = { evalMath, solve, parseLatex };
