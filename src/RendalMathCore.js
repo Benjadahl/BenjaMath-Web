@@ -21,7 +21,25 @@ function solve (eq, variable) {
 
 //Converts a latex string to regular math string
 function parseLatex (latex) {
+	latex = pullVars(latex);
 	return new AlgebraLatex(latex).toMath();
+}
+
+function pullVars(latex) {
+	//We need to find variables inside variables. At the moment, we just seacrh and replace for variable names, until we find no more matches.
+	var foundAnything = true;
+	var limit = 100;
+	while (foundAnything && limit > 0) {
+		foundAnything = false;
+		for (variable in variables) {
+			if (latex.includes(variable)) {
+				latex = latex.replace(variable, variables[variable]);
+				foundAnything = true;
+			}
+		}
+		limit--;
+	}
+	return latex;
 }
 
 
@@ -37,19 +55,7 @@ function evalMath(mathString) {
 		latex = latex.split(":=")[1];
 	}
 
-	//We need to find variables inside variables. At the moment, we just seacrh and replace for variable names, until we find no more matches.
-	var foundAnything = true;
-	var limit = 100;
-	while (foundAnything && limit > 0) {
-		foundAnything = false;
-		for (variable in variables) {
-			if (latex.includes(variable)) {
-				latex = latex.replace(variable, variables[variable]);
-				foundAnything = true;
-			}
-		}
-		limit--;
-	}
+	latex = pullVars(latex);
 
 
 
@@ -89,9 +95,6 @@ function evalMath(mathString) {
 		}
 	} catch (exception) {
 		evalResult = exception.toString();
-	}
-	if (limit < 0) {
-		evalResult = "Variables went wrong.";
 	}
 
 	return evalResult;
