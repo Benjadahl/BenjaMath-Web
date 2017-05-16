@@ -5,7 +5,7 @@ require("ckeditor");
 var algebra = require("algebra.js");
 var math = require("mathjs");
 var stringToLatex = require("./stringToLatex.js");
-const AlgebraLatex = require("algebra-latex");
+var rendalMathCore = require("./RendalMathCore.js");
 
 var MQ = MathQuill.getInterface(2);
 
@@ -70,6 +70,13 @@ $(document).ready(function () {
           }
         }
       }).select().focus());
+
+			$("#" + id).keydown(function(e) {
+				if (e.keyCode == 13) {
+					let id = e.currentTarget.id;
+					renderMathBox(id);
+				}
+			});
       //Pretty bad hack - it makes the box editable and empty
       let currentQuill = MathQuills[MathQuills.length - 1];
       setTimeout(function(){
@@ -146,44 +153,19 @@ $(document).ready(function () {
 
 parser = new DOMParser();
 
+function renderMathBox(id) {
+	console.log("MQ:", MQ(document.getElementById(id)).latex());
+	let latex = MQ(document.getElementById(id)).latex();
+	$("#" + id).parent().children().last().html(' = ' + rendalMathCore.evalMath(latex));
+
+}
+
 function renderPreview () {
-  var eData = CKEDITOR.instances.editor.getData();
-  var mathTags = document.getElementsByClassName("math");
-  for (var i = 0; i < mathTags.length; i++) {
-    let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
-    let mathEvaluated = algebrite.eval(scriptingText).toString();
-    $(mathTags[i]).children().last().html(" = " + mathEvaluated);
-  }
-
-  for (var i = 0; i < MathQuills.length; i++) {
-    let latex = MathQuills[i].latex();
-    let result;
-
-    //Check for it being an Algebrite command
-    if (latex[0] === "@") {
-      console.log("yay");
-      let depth = 0;
-      let startPos;
-      let endPos;
-      for (j = 0; j < latex.length; j++) {
-        if (latex[j] === "(") {
-          startPos = j + 1;
-          depth++;
-        } else if (latex[j] === ")") {
-          if (depth === 1) {
-            //-6 because of the end being \right)
-            endPos = j - 6;
-            break;
-          } else {
-            depth--;
-          }
-        }
-      }
-      let stringMath = new AlgebraLatex(latex.substring(startPos, endPos)).toMath();
-      result = latex.substring(1, startPos - 6) + "(" + stringMath + ")";
-    } else {
-      result = new AlgebraLatex(latex).toMath();
-    }
-    $(MathQuills[i].el()).parent().children().last().html(' = ' + algebrite.eval(result).toString());
-  }
+	var eData = CKEDITOR.instances.editor.getData();
+	var mathTags = document.getElementsByClassName("math");
+	for (var i = 0; i < mathTags.length; i++) {
+		let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
+		let mathEvaluated = algebrite.eval(scriptingText).toString();
+		$(mathTags[i]).children().last().html(" = " + mathEvaluated);
+	}
 }
