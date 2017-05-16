@@ -55,6 +55,13 @@ CKEDITOR.config.toolbar_Full =
 
 //Modify editor
 CKEDITOR.config.allowedContent = true;
+CKEDITOR.config.startupFocus = true;
+
+//When the toolbar disappears, just turn the event off. Yes, this is a good way to do it.
+CKEDITOR.inline(document.getElementById("editor")).on('blur', function(e) {
+	return false;
+});
+
 $(document).ready(function () {
   var editor = CKEDITOR.instances.editor;
   editor.addCommand( 'insertMathquill', {
