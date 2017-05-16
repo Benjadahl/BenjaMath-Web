@@ -5,8 +5,7 @@ require("ckeditor");
 var algebra = require("algebra.js");
 var math = require("mathjs");
 var stringToLatex = require("./stringToLatex.js");
-var rendalMathCore = require("./RendalMathCore.js");
-const AlgebraLatex = require('algebra-latex');
+var RMC = require("./RendalMathCore.js");
 
 var MQ = MathQuill.getInterface(2);
 
@@ -132,15 +131,14 @@ $(document).ready(function () {
       $.contextMenu({
           selector: '.mathField',
           callback: function(key, options) {
-            console.log(this);
             let mathQuill = MathQuills[$(this).attr("id")];
             let latex = mathQuill.latex();
-            let mathString = new AlgebraLatex(latex).toMath();
-            console.log(latex);
+            let mathString = RMC.parseLatex(latex);
             let resultElement = $(this).parent().children().last();
             switch (key) {
               case "solve":
-                $(resultElement).html(" = " + algebrite.roots(mathString).toString());
+                let variable = prompt("Solve for variable: ","x");
+                $(resultElement).html(" = " + RMC.solve(mathString, variable));
                 break;
             }
           },

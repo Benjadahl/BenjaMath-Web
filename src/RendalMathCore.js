@@ -7,6 +7,15 @@ var variables = {
 	tau: "pi\\cdot2",
 };
 
+/* DEFAULT MATH FUNCTIONS */
+function solve (eq, variable) {
+	return algebrite.roots(eq, variable).toString();
+}
+
+//Converts a latex string to regular math string
+function parseLatex (latex) {
+	return new AlgebraLatex(latex).toMath();
+}
 
 function evalMath(mathString) {
 	let latex = mathString;
@@ -78,4 +87,4 @@ function evalMath(mathString) {
 	return evalResult;
 }
 
-module.exports = { evalMath };
+module.exports = { evalMath, solve, parseLatex };
