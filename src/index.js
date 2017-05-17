@@ -67,7 +67,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MqCount;
-      editor.insertHtml( '<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>&nbsp;</span></p><p></p>' );
+      editor.insertHtml('<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>&nbsp;</span></p><p></p>');
       MqCount++;
       MathQuills.push(MQ.MathField(document.getElementById(id),
       {
@@ -151,11 +151,11 @@ $(document).ready(function () {
                 break;
               case "solve":
                 variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(" = " + RMC.solve(mathString, variable));
+                $(resultElement).html(" → " + variable + " = " + RMC.solve(mathString, variable));
                 break;
               case "fsolve":
                 variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(" = " + RMC.fsolve(mathString, variable));
+                $(resultElement).html(" → " + variable + RMC.fsolve(mathString, variable));
                 break;
               case "factor":
                 $(resultElement).html(" = " + RMC.factor(mathString));
@@ -183,7 +183,6 @@ function renderMathBox(id) {
 	console.log("MQ:", MQ(document.getElementById(id)).latex());
 	let latex = MQ(document.getElementById(id)).latex();
 	$("#" + id).parent().children().last().html(RMC.evalMath(latex));
-
 }
 
 function renderPreview () {
