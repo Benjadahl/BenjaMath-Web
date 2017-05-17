@@ -162,7 +162,6 @@ $(document).ready(function () {
                 break;
               case "integral":
                 variable = prompt("Integrate with respect to varibale: ", "x");
-                console.log(variable);
                 $(resultElement).html(" = " + RMC.fsolve(mathString, variable));
                 break;
             }
