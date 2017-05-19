@@ -160,7 +160,7 @@ $(document).ready(function () {
                 break;
               case "integral":
                 variable = prompt("Integrate with respect to varibale: ", "x");
-                $(resultElement).html(katex.integral("\\, =" + RMC.simplify(mathString)));
+                $(resultElement).html(katex.renderToString("\\, =" + RMC.integral(mathString)));
                 break;
             }
           },

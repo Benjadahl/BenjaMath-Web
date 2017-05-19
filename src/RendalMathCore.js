@@ -51,7 +51,7 @@ function replaceRegexes(latex) {
 //Converts a latex string to regular math string
 function parseLatex (latex) {
 	latex = pullVars(latex);
-	return new AlgebraLatex(latex).toMath();
+	return new AlgebraLatex(latex).toAlgebrite();
 }
 
 //Search-replace variables with their values
