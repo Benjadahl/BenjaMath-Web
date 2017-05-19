@@ -3,7 +3,6 @@ var katex = require("katex");
 window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
 require("ckeditor");
 var algebra = require("algebra.js");
-var math = require("mathjs");
 var stringToLatex = require("./stringToLatex.js");
 var RMC = require("./RendalMathCore.js");
 
@@ -155,6 +154,9 @@ $(document).ready(function () {
                 variable = prompt("Solve for variable: ","x");
                 $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
                 break;
+              case "evalf":
+                $(resultElement).html(katex.renderToString("\\, \\approx" + RMC.evalf(mathString.toString())));
+                break;
               case "factor":
               $(resultElement).html(katex.renderToString("\\, =" + RMC.factor(mathString)));
                 break;
@@ -168,6 +170,7 @@ $(document).ready(function () {
               "simplify": {name: "Simplify", icon: "fa-pie-chart"},
               "solve": {name: "Solve", icon: "fa-asterisk"},
               "fsolve": {name: "Fsolve", icon: "fa-cogs"},
+              "evalf": {name: "Evalf", icon:"fa-bolt"},
               "factor": {name: "Factor", icon: "fa-plus-square-o"},
               "integral": {name: "Integral", icon: "fa-line-chart"}
           }

@@ -1,6 +1,7 @@
 var algebrite = require('algebrite');
 const AlgebraLatex = require('algebra-latex');
 var katex = require("katex");
+var math = require("mathjs");
 
 //Our list of variables. These are just for testing.
 var variables = {
@@ -34,6 +35,11 @@ function factor (expr) {
 
 function integral (expr, variable) {
 	return algebrite.integral(expr, variable).toLatexString();
+}
+
+function evalf (expr) {
+	//Use Math.js for evaluation
+	return math.eval(expr);
 }
 
 //Converts a latex string to regular math string
@@ -120,4 +126,4 @@ function evalMath(mathString) {
 
 
 updateVariablesTable();
-module.exports = { evalMath, simplify, solve, fsolve, factor, integral, parseLatex };
+module.exports = { evalMath, simplify, solve, fsolve, factor, integral, parseLatex, evalf };
