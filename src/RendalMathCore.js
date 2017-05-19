@@ -10,7 +10,7 @@ var variables = {
 
 function updateVariablesTable() {
 	$("table > tbody").html("");
-	for (variable in variables) {
+	for (var variable in variables) {
 		$("table > tbody").append("<tr><td>" + variable + "</td><td>" + variables[variable] + "</td></tr>");
 	}
 }
@@ -48,7 +48,7 @@ function pullVars(latex) {
 	var limit = 100;
 	while (foundAnything && limit > 0) {
 		foundAnything = false;
-		for (variable in variables) {
+		for (var variable in variables) {
 			if (latex.includes(variable)) {
 				latex = latex.replace(variable, variables[variable]);
 				foundAnything = true;

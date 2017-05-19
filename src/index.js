@@ -117,14 +117,12 @@ $(document).ready(function () {
     label: "Insert Equation",
     command: 'insertMathquill',
     toolbar: 'insert',
-		label: "EQ"
   });
 
   editor.ui.addButton("mathSection", {
     label: "New Math Section",
     command: 'insertMathSection',
     toolbar: 'insert',
-		label: "CODE"
   });
 
   editor.on("change", function() {
