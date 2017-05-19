@@ -1,5 +1,6 @@
 var algebrite = require('algebrite');
 const AlgebraLatex = require('algebra-latex');
+var katex = require("katex");
 
 //Our list of variables. These are just for testing.
 var variables = {
@@ -16,23 +17,23 @@ function updateVariablesTable() {
 
 /* DEFAULT MATH FUNCTIONS */
 function simplify (expr) {
-	return algebrite.simplify(expr).toString();
+	return algebrite.simplify(expr).toLatexString();
 }
 
 function solve (eq, variable) {
-	return algebrite.roots(eq, variable).toString();
+	return algebrite.roots(eq, variable).toLatexString();
 }
 
 function fsolve (eq, variable) {
-	return algebrite.nroots(eq, variable).toString();
+	return algebrite.nroots(eq, variable).toLatexString();
 }
 
 function factor (expr) {
-	return algebrite.factor(expr).toString();
+	return algebrite.factor(expr).toLatexString();
 }
 
 function integral (expr, variable) {
-	return algebrite.integral(expr, variable).toString();
+	return algebrite.integral(expr, variable).toLatexString();
 }
 
 //Converts a latex string to regular math string
@@ -107,7 +108,8 @@ function evalMath(mathString) {
 			variables[toSet] = algebrite.eval(result).toString();
 			updateVariablesTable();
 		} else {
-			evalResult = " = " + algebrite.eval(result).toString();
+			console.log(algebrite.eval(result).toLatexString());
+			evalResult = katex.renderToString("\\, =" + algebrite.eval(result).toLatexString());
 		}
 	} catch (exception) {
 		evalResult = exception.toString();

@@ -147,22 +147,22 @@ $(document).ready(function () {
             let variable;
             switch (key) {
               case "simplify":
-                $(resultElement).html(" = " + RMC.simplify(mathString));
+                $(resultElement).html(katex.renderToString("\\, =" + RMC.simplify(mathString)));
                 break;
               case "solve":
                 variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(" → " + variable + " = " + RMC.solve(mathString, variable));
+                $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.solve(mathString, variable)));
                 break;
               case "fsolve":
                 variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(" → " + variable + RMC.fsolve(mathString, variable));
+                $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
                 break;
               case "factor":
-                $(resultElement).html(" = " + RMC.factor(mathString));
+              $(resultElement).html(katex.renderToString("\\, =" + RMC.factor(mathString)));
                 break;
               case "integral":
                 variable = prompt("Integrate with respect to varibale: ", "x");
-                $(resultElement).html(" = " + RMC.fsolve(mathString, variable));
+                $(resultElement).html(katex.integral("\\, =" + RMC.simplify(mathString)));
                 break;
             }
           },
