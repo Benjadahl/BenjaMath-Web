@@ -28,3 +28,7 @@ div#variables {
 div#editorThing {
 	margin-left: 15%;
 }
+
+#openInput {
+  display: none;
+}

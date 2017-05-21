@@ -5,18 +5,16 @@ require("ckeditor");
 var algebra = require("algebra.js");
 var stringToLatex = require("./stringToLatex.js");
 var RMC = require("./RendalMathCore.js");
-
+var fileSaver = require("file-saver");
 var MQ = MathQuill.getInterface(2);
 
+var MathQuills = [];
+var MqCount = 0;
 
 
 
 console.log("Welcome to BenjaMath");
 
-//console.log(stringToLatex("-1/2 (b^2 / (a^2) - 4 c / a)^(1/2) - b / (2 a)^(3*(4+9))"));
-
-var MathQuills = [];
-var MqCount = 0;
 
 /*
   BUTTON EVENT
@@ -29,6 +27,44 @@ document.getElementById("printButton").addEventListener("click", function(){
   $("#printContent").remove();
   $("#mainContainer").show();
 });
+
+//Event for the saveButton
+document.getElementById("saveButton").addEventListener("click", function(){
+  let editorData = CKEDITOR.instances.editor.getData();
+  var blob = new Blob([editorData], {type: "text/plain;charset=utf-8"});
+  var projectName = prompt("Enter project name:","BenjaMath Project");
+  if(projectName !== null){
+    fileSaver.saveAs(blob, projectName + ".html");
+  }
+});
+
+//Event for the openButton
+document.getElementById("openButton").addEventListener("click", function(){
+  $("#openInput").trigger("click");
+});
+
+//Event for choosing new file
+document.getElementById("openInput").addEventListener("change", function(evt){
+  //Choose the first file from the list, as only one file is allowed
+  var f = evt.target.files[0];
+  //Declare a new fileReader
+  var reader = new FileReader();
+  //Set up the code for loading a file with the reader
+  reader.onload = function(e){
+    //Contents of file being read
+    var contents = e.target.result;
+    //Set the contents of the editor
+    CKEDITOR.instances.editor.setData(contents);
+  }
+  lastUsedPath = f.path;
+  //Read the file as text and then run the onload function
+  reader.readAsText(f);
+});
+
+
+/*
+  MODIFY EDITOR
+*/
 
 CKEDITOR.config.toolbar = 'Full';
 
@@ -52,7 +88,6 @@ CKEDITOR.config.toolbar_Full =
 	{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
 ];
 
-//Modify editor
 CKEDITOR.config.allowedContent = true;
 CKEDITOR.config.startupFocus = true;
 
