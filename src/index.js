@@ -9,12 +9,63 @@ var fileSaver = require("file-saver");
 var MQ = MathQuill.getInterface(2);
 
 var MathQuills = [];
-var MqCount = 0;
-
 
 
 console.log("Welcome to BenjaMath");
 
+/*
+  Functions
+*/
+function newMathQuill (element) {
+  MathQuills.push(MQ.MathField(element).select().focus());
+  let currentQuill = MathQuills[MathQuills.length - 1];
+  $(currentQuill.el()).keydown(function(e) {
+    if (e.keyCode == 13) {
+      let id = e.currentTarget.id;
+      renderMathBox(id);
+    }
+  });
+  //Pretty bad hack - it makes the box editable and empty
+  setTimeout(function(){
+    currentQuill.clearSelection();
+    if (currentQuill.latex() === "placeholder") {
+      currentQuill.latex("");
+    }
+  }, 200);
+
+  //Also hack when clicked
+  currentQuill.el().addEventListener("click", function(){
+    if (currentQuill.latex() === "") {
+      currentQuill.latex("placeholder");
+    }
+    currentQuill.select();
+    setTimeout(function(){
+      currentQuill.clearSelection();
+      if (currentQuill.latex() === "placeholder") {
+        currentQuill.latex("");
+      }
+    }, 200);
+  });
+}
+
+function initMathquills () {
+  let mathFields = document.getElementsByClassName("mathField");
+
+  for (i = 0; i < mathFields.length; i++) {
+    newMathQuill(mathFields[i]);
+  }
+  //Get all mathfields class and init
+
+}
+
+function revertMathQuills () {
+  for (i = 0; i < MathQuills.length; i++) {
+    let element = MathQuills[i].el();
+    let latex = MathQuills[i].latex();
+    MathQuills[i].revert();
+    $(element).html(latex);
+  }
+}
 
 /*
   BUTTON EVENT
@@ -30,6 +81,7 @@ document.getElementById("printButton").addEventListener("click", function(){
 
 //Event for the saveButton
 document.getElementById("saveButton").addEventListener("click", function(){
+  revertMathQuills();
   let editorData = CKEDITOR.instances.editor.getData();
   var blob = new Blob([editorData], {type: "text/plain;charset=utf-8"});
   var projectName = prompt("Enter project name:","BenjaMath Project");
@@ -41,6 +93,7 @@ document.getElementById("saveButton").addEventListener("click", function(){
 //Event for the openButton
 document.getElementById("openButton").addEventListener("click", function(){
   $("#openInput").trigger("click");
+
 });
 
 //Event for choosing new file
@@ -55,6 +108,7 @@ document.getElementById("openInput").addEventListener("change", function(evt){
     var contents = e.target.result;
     //Set the contents of the editor
     CKEDITOR.instances.editor.setData(contents);
+    initMathquills();
   }
   lastUsedPath = f.path;
   //Read the file as text and then run the onload function
@@ -100,44 +154,9 @@ $(document).ready(function () {
   var editor = CKEDITOR.instances.editor;
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
-      let id = MqCount;
+      let id = MathQuills.length;
       editor.insertHtml('<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>&nbsp;</span></p><p></p>');
-      MqCount++;
-      MathQuills.push(MQ.MathField(document.getElementById(id),
-      {
-        handlers: {
-          enter: function () {
-            console.log("test");
-          }
-        }
-      }).select().focus());
-
-			$("#" + id).keydown(function(e) {
-				if (e.keyCode == 13) {
-					let id = e.currentTarget.id;
-					renderMathBox(id);
-				}
-			});
-      //Pretty bad hack - it makes the box editable and empty
-      let currentQuill = MathQuills[MathQuills.length - 1];
-      setTimeout(function(){
-        currentQuill.clearSelection();
-        currentQuill.latex("");
-      }, 200);
-
-      //Also hack when clicked
-      currentQuill.el().addEventListener("click", function(){
-        if (currentQuill.latex() === "") {
-          currentQuill.latex("placeholder");
-        }
-        currentQuill.select();
-        setTimeout(function(){
-          currentQuill.clearSelection();
-          if (currentQuill.latex() === "placeholder") {
-            currentQuill.latex("");
-          }
-        }, 200);
-      });
+      newMathQuill(document.getElementById(id));
     }
   });
 
