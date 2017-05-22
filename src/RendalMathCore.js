@@ -122,13 +122,14 @@ function evalMath(mathString) {
 				var checksOut = true;
 				variables[toSet] = latex;
 				updateVariablesTable();
-
-
 				return functionName + " rightarrow" + latex;
 			} else {
 				return "Invalid function assignment.";
 			}
-
+		} else {
+			variables[toSet] = latex;
+			updateVariablesTable();
+			return toSet + "rightarrow" + latex;
 		}
 
 	}
@@ -180,14 +181,8 @@ function evalMath(mathString) {
 
 	let evalResult = "";
 	try {
-		if (toSet !== null) {
-			evalResult = " " + toSet + ":=" + algebrite.eval(result).toString();
-			variables[toSet] = algebrite.eval(result).toString();
-			updateVariablesTable();
-		} else {
-			console.log(algebrite.eval(result).toLatexString());
-			evalResult = katex.renderToString("\\, =" + algebrite.eval(result).toLatexString());
-		}
+		console.log(algebrite.eval(result).toLatexString());
+		evalResult = katex.renderToString("\\, =" + algebrite.eval(result).toLatexString());
 	} catch (exception) {
 		evalResult = exception.toString();
 	}
