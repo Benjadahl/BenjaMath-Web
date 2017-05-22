@@ -1,7 +1,7 @@
 var algebrite = require("algebrite");
 var katex = require("katex");
-window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
-require("ckeditor");
+//window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
+//require("ckeditor");
 var algebra = require("algebra.js");
 var stringToLatex = require("./stringToLatex.js");
 var RMC = require("./RendalMathCore.js");
@@ -146,12 +146,21 @@ CKEDITOR.config.allowedContent = true;
 CKEDITOR.config.startupFocus = true;
 
 //When the toolbar disappears, just turn the event off. Yes, this is a good way to do it.
-CKEDITOR.inline(document.getElementById("editor")).on('blur', function(e) {
+/*CKEDITOR.inline(document.getElementById("editor")).on('blur', function(e) {
 	return false;
-});
+});*/
 
 $(document).ready(function () {
-  var editor = CKEDITOR.instances.editor;
+  // We need to turn off the automatic editor creation first.
+  CKEDITOR.disableAutoInline = true;
+
+  CKEDITOR.inline("editor", {
+    format_tags: 'p;math;h1;h2;h3',
+    format_math: {name: "Math", element: "pre"}
+  });
+  $("#editor").attr("contenteditable","true");
+
+  /*var editor = CKEDITOR.instances.editor;
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MathQuills.length;
@@ -184,7 +193,8 @@ $(document).ready(function () {
 
   editor.on("instanceReady", function() {
     renderPreview();
-  });
+  });*/
+
 
   //Set up custom contextMenu for the mathfields
   $(function() {
