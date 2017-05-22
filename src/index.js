@@ -109,7 +109,7 @@ document.getElementById("openInput").addEventListener("change", function(evt){
     //Set the contents of the editor
     CKEDITOR.instances.editor.setData(contents);
     initMathquills();
-  }
+  };
   lastUsedPath = f.path;
   //Read the file as text and then run the onload function
   reader.readAsText(f);

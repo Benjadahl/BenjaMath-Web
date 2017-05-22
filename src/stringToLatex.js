@@ -13,7 +13,7 @@ var matchParentheses = function (input, startIndex, reverse = false) {
     }
   }
   return -1;
-}
+};
 
 var searchAll = function (input, searchValue) {
   //Input string
@@ -26,13 +26,13 @@ var searchAll = function (input, searchValue) {
     searchIndex = input.indexOf(searchValue, i);
   }
   return result;
-}
+};
 
 var replaceAtIndex = function (input, index, replacement) {
   let preIndex = input.substr(0, index);
   let postIndex = input.substr(index + 1, input.length + 1);
   return preIndex + replacement + postIndex;
-}
+};
 
 var stringToLatex = function (input) {
   console.log(input);
@@ -99,6 +99,6 @@ var stringToLatex = function (input) {
   }
 
   return input;
-}
+};
 
 module.exports = stringToLatex;
