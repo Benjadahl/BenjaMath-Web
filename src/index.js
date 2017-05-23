@@ -155,12 +155,12 @@ $(document).ready(function () {
   CKEDITOR.disableAutoInline = true;
 
   CKEDITOR.inline("editor", {
-    format_tags: 'p;math;h1;h2;h3',
-    format_math: {name: "Math", element: "pre"}
+    format_tags: 'p;script;h1;h2;h3',
+    format_script: {name: "Scripting", element: "pre"}
   });
   $("#editor").attr("contenteditable","true");
 
-  /*var editor = CKEDITOR.instances.editor;
+  var editor = CKEDITOR.instances.editor;
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MathQuills.length;
@@ -193,7 +193,7 @@ $(document).ready(function () {
 
   editor.on("instanceReady", function() {
     renderPreview();
-  });*/
+  });
 
 
   //Set up custom contextMenu for the mathfields
