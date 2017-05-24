@@ -10,6 +10,7 @@ var MQ = MathQuill.getInterface(2);
 
 var MathQuills = [];
 
+var editor;
 
 console.log("Welcome to BenjaMath");
 
@@ -160,7 +161,8 @@ $(document).ready(function () {
   });
   $("#editor").attr("contenteditable","true");
 
-  var editor = CKEDITOR.instances.editor;
+  editor = CKEDITOR.instances.editor;
+
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MathQuills.length;
@@ -169,32 +171,11 @@ $(document).ready(function () {
     }
   });
 
-  editor.addCommand( 'insertMathSection', {
-    exec: function( editor ) {
-      editor.insertHtml("<h5 class='math'>Script here<span contenteditable='false'> = null</span></h5>");
-    }
-  });
-
   editor.ui.addButton("mathQuill", {
     label: "Insert Equation",
     command: 'insertMathquill',
     toolbar: 'insert',
   });
-
-  editor.ui.addButton("mathSection", {
-    label: "New Math Section",
-    command: 'insertMathSection',
-    toolbar: 'insert',
-  });
-
-  editor.on("change", function() {
-    renderPreview();
-  });
-
-  editor.on("instanceReady", function() {
-    renderPreview();
-  });
-
 
   //Set up custom contextMenu for the mathfields
   $(function() {
@@ -250,12 +231,16 @@ function renderMathBox(id) {
 	$("#" + id).parent().children().last().html(RMC.evalMath(latex));
 }
 
-function renderPreview () {
-	var eData = CKEDITOR.instances.editor.getData();
-	var mathTags = document.getElementsByClassName("math");
-	for (var i = 0; i < mathTags.length; i++) {
-		let scriptingText = $(mathTags[i]).clone().children().remove().end().text();
-		let mathEvaluated = algebrite.eval(scriptingText).toString();
-		$(mathTags[i]).children().last().html(" = " + mathEvaluated);
-	}
-}
+$("#editor").keydown(function (e) {
+  if (e.altKey && e.keyCode === 13) {
+    let element = editor.getSelection().getStartElement().$;
+    if (element.tagName === "PRE") {
+      let scriptingText = $(element).clone().children().remove().end().text();
+      if ($(element).children(".result").length > 0) {
+        $(element).find(".result").html(katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()));
+      } else {
+        element.innerHTML += "<span class='result' contenteditable='false'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
+      }
+    }
+  }
+});
