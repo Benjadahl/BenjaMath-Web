@@ -4,7 +4,11 @@
   "description": "A web based CAS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "move_dependencies": "cp -r ./node_modules/katex/ ./dependencies/; cp -r ./node_modules/jquery-contextmenu/ ./dependencies/; cp -r ./node_modules/font-awesome/ ./dependencies/; cp -r ./node_modules/jquery/ ./dependencies/; cp -r ./node_modules/mathquill/ ./dependencies/; cp -r ./node_modules/ckeditor/ ./dependencies/",
+    "build_base": "npm run move_dependencies; ./node_modules/.bin/browserify src/index.js --standalone index > build/index.js",
+    "build_chrome": "npm run build_base; cp -r ./build/* ./dist/chromeApp/codebase/build/; cp index.html ./dist/chromeApp/codebase; cp -r css/ ./dist/chromeApp/codebase/; cp -r ./dependencies/* ./dist/chromeApp/codebase/dependencies/",
+    "lint": "./node_modules/.bin/jshint src/*"
   },
   "repository": {
     "type": "git",
