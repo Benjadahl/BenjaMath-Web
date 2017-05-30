@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -27,6 +27,35 @@ function createWindow () {
     // when you should delete the corresponding element.
     win = null
   })
+  const template = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Open',
+        accelerator: 'CmdOrCtrl+o',
+        click() {
+          console.log('OPENED');
+        }
+      },
+      {
+        label: 'Save',
+        accelerator: 'CmdOrCtrl+s',
+        click() {
+          console.log('SAVE')
+        }
+      },
+      {
+        label: 'Save As...',
+        accelerator: 'CmdOrCtrl+shift+s',
+        click() {
+          console.log('SAVEAS');
+        }
+      }
+    ]
+  }
+];
+Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 // This method will be called when Electron has finished
