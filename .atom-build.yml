@@ -1,1 +1,1 @@
-cmd: make
+cmd: electron .

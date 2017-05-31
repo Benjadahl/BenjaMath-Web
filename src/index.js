@@ -3,16 +3,21 @@ var katex = require("katex");
 //window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
 //require("ckeditor");
 var algebra = require("algebra.js");
-var stringToLatex = require("./stringToLatex.js");
-var RMC = require("./RendalMathCore.js");
+var RMC = require("./src/RendalMathCore.js");
 var fileSaver = require("file-saver");
 var MQ = MathQuill.getInterface(2);
+var electron = require("electron");
 
 var MathQuills = [];
 
 var editor;
 
 console.log("Welcome to BenjaMath");
+
+
+electron.ipcRenderer.on("open", function (e, data) {
+  console.log(data.html);
+});
 
 /*
   Functions

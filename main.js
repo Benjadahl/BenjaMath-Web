@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const {app, BrowserWindow, Menu, dialog} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -18,7 +18,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  //win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -36,6 +36,13 @@ function createWindow () {
         accelerator: 'CmdOrCtrl+o',
         click() {
           console.log('OPENED');
+          var file = dialog.showOpenDialog(win, {
+            properties: ['openFile']
+          });
+          if (typeof file !== "undefined") {
+            console.log(file);
+            win.webContents.send('open', {html: "htmls"});
+          }
         }
       },
       {
