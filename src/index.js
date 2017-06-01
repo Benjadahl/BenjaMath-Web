@@ -17,6 +17,8 @@ console.log("Welcome to BenjaMath");
 
 electron.ipcRenderer.on("open", function (e, data) {
   console.log(data.html);
+  CKEDITOR.instances.editor.setData(data.html);
+  initMathquills();
 });
 
 /*

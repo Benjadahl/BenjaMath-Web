@@ -1,6 +1,7 @@
 const {app, BrowserWindow, Menu, dialog} = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -37,11 +38,13 @@ function createWindow () {
         click() {
           console.log('OPENED');
           var file = dialog.showOpenDialog(win, {
-            properties: ['openFile']
-          });
+            properties: ['openFile'],
+            filters: [{name: "htmlFiles", extensions: ['html']}]
+          })[0];
           if (typeof file !== "undefined") {
-            console.log(file);
-            win.webContents.send('open', {html: "htmls"});
+            fs.readFile(file, "utf-8", function (err, html) {
+              win.webContents.send('open', {html: html});
+            });
           }
         }
       },
