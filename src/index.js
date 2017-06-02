@@ -16,6 +16,8 @@ vex.defaultOptions.className = 'vex-theme-os';
 
 var version = require("./package.json").version;
 
+var lastPath = "";
+
 //Set up menuBar
 const template = [
   {
@@ -31,8 +33,11 @@ const template = [
           })[0];
           if (typeof file !== "undefined") {
             fs.readFile(file, "utf-8", function (err, html) {
-              CKEDITOR.instances.editor.setData(html);
-              initMathquills();
+              if (!err) {
+                setLastPath(file);
+                CKEDITOR.instances.editor.setData(html);
+                initMathquills();
+              }
             });
           }
         }
@@ -41,21 +46,23 @@ const template = [
         label: 'Save',
         accelerator: 'CmdOrCtrl+s',
         click() {
-          console.log('SAVE')
+          if (lastPath === "") {
+            saveAs();
+          } else {
+            revertMathQuills();
+            let editorData = CKEDITOR.instances.editor.getData();
+            fs.writeFile(lastPath, editorData, function (err) {
+              console.log("Saved to " + lastPath);
+            });
+            initMathquills();
+          }
         }
       },
       {
         label: 'Save As...',
         accelerator: 'CmdOrCtrl+shift+s',
         click() {
-          revertMathQuills();
-          let editorData = CKEDITOR.instances.editor.getData();
-          var file = dialog.showSaveDialog({
-            filters: [{name: "htmlFiles", extensions: ['html']}]
-          });
-          fs.writeFile(file, editorData, function (err) {
-
-          });
+          saveAs();
         }
       },
       {
@@ -139,6 +146,25 @@ function newMathQuill (element) {
       }
     }, 200);
   });
+}
+
+function saveAs () {
+  revertMathQuills();
+  let editorData = CKEDITOR.instances.editor.getData();
+  var file = dialog.showSaveDialog({
+    filters: [{name: "htmlFiles", extensions: ['html']}]
+  });
+  fs.writeFile(file, editorData, function (err) {
+    if (!err) {
+      setLastPath(file);
+    }
+  });
+  initMathquills();
+}
+
+function setLastPath (path) {
+  lastPath = path;
+  document.title = "BenjaMath - " + path;
 }
 
 function initMathquills () {
