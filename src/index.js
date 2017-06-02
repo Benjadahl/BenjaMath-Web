@@ -79,6 +79,12 @@ console.log("Welcome to BenjaMath");
 /*
   Functions
 */
+function renderMathBox(id) {
+	console.log("MQ:", MQ(document.getElementById(id)).latex());
+	let latex = MQ(document.getElementById(id)).latex();
+	$("#" + id).parent().find("#result").html(RMC.evalMath(latex));
+}
+
 function newMathQuill (element) {
   MathQuills.push(MQ.MathField(element).select().focus());
   let currentQuill = MathQuills[MathQuills.length - 1];
@@ -179,7 +185,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MathQuills.length;
-      editor.insertHtml('<p contenteditable="false">&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span>&nbsp;</span></p><p></p>');
+      editor.insertHtml('<p>&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span id="result">&nbsp;</span><span>&nbsp;</span></p>');
       newMathQuill(document.getElementById(id));
     }
   });
@@ -198,7 +204,7 @@ $(document).ready(function () {
             let mathQuill = MathQuills[$(this).attr("id")];
             let latex = mathQuill.latex();
             let mathString = RMC.parseLatex(latex);
-            let resultElement = $(this).parent().children().last();
+            let resultElement = $(this).parent().find("#result");
             let variable;
             switch (key) {
               case "simplify":
@@ -237,12 +243,6 @@ $(document).ready(function () {
 });
 
 parser = new DOMParser();
-
-function renderMathBox(id) {
-	console.log("MQ:", MQ(document.getElementById(id)).latex());
-	let latex = MQ(document.getElementById(id)).latex();
-	$("#" + id).parent().children().last().html(RMC.evalMath(latex));
-}
 
 $("#editor").keydown(function (e) {
   if (e.altKey && e.keyCode === 13) {

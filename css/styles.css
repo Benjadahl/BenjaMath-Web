@@ -1,5 +1,4 @@
 #editorContainer {
-  margin-left: 15%;
 }
 
 #editor {
@@ -23,7 +22,7 @@
 div#variables {
 	width: 15%;
 	margin-top: 5%;
-	float: left;
+	float: right;
 }
 
 #openInput {
