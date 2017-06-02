@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, dialog} = require('electron')
+const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const fs = require('fs');
@@ -28,44 +28,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     win = null
   })
-  const template = [
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Open',
-        accelerator: 'CmdOrCtrl+o',
-        click() {
-          console.log('OPENED');
-          var file = dialog.showOpenDialog(win, {
-            properties: ['openFile'],
-            filters: [{name: "htmlFiles", extensions: ['html']}]
-          })[0];
-          if (typeof file !== "undefined") {
-            fs.readFile(file, "utf-8", function (err, html) {
-              win.webContents.send('open', {html: html});
-            });
-          }
-        }
-      },
-      {
-        label: 'Save',
-        accelerator: 'CmdOrCtrl+s',
-        click() {
-          console.log('SAVE')
-        }
-      },
-      {
-        label: 'Save As...',
-        accelerator: 'CmdOrCtrl+shift+s',
-        click() {
-          console.log('SAVEAS');
-        }
-      }
-    ]
-  }
-];
-Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 // This method will be called when Electron has finished

@@ -7,19 +7,65 @@ var RMC = require("./src/RendalMathCore.js");
 var fileSaver = require("file-saver");
 var MQ = MathQuill.getInterface(2);
 var electron = require("electron");
+const Menu = require("electron").remote.Menu;
+const dialog = require("electron").remote.dialog;
+const fs = require("fs");
+
+//Set up menuBar
+const template = [
+{
+  label: 'File',
+  submenu: [
+    {
+      label: 'Open',
+      accelerator: 'CmdOrCtrl+o',
+      click() {
+        console.log('OPENED');
+        var file = dialog.showOpenDialog({
+          properties: ['openFile'],
+          filters: [{name: "htmlFiles", extensions: ['html']}]
+        })[0];
+        if (typeof file !== "undefined") {
+          fs.readFile(file, "utf-8", function (err, html) {
+            console.log(html);
+            CKEDITOR.instances.editor.setData(html);
+            initMathquills();
+          });
+        }
+      }
+    },
+    {
+      label: 'Save',
+      accelerator: 'CmdOrCtrl+s',
+      click() {
+        console.log('SAVE')
+      }
+    },
+    {
+      label: 'Save As...',
+      accelerator: 'CmdOrCtrl+shift+s',
+      click() {
+        revertMathQuills();
+        let editorData = CKEDITOR.instances.editor.getData();
+        var file = dialog.showSaveDialog();
+        fs.writeFile(file, editorData, function (err) {
+          console.log("we did it");
+        });
+        console.log(file);
+        console.log('SAVEAS');
+      }
+    }
+  ]
+}
+];
+Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
 
 var MathQuills = [];
 
 var editor;
 
 console.log("Welcome to BenjaMath");
-
-
-electron.ipcRenderer.on("open", function (e, data) {
-  console.log(data.html);
-  CKEDITOR.instances.editor.setData(data.html);
-  initMathquills();
-});
 
 /*
   Functions
