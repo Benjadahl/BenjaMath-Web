@@ -14,7 +14,7 @@ var vex = require('vex-js');
 vex.registerPlugin(require('vex-dialog'));
 vex.defaultOptions.className = 'vex-theme-os';
 
-
+var version = require("./package.json").version;
 
 //Set up menuBar
 const template = [
@@ -85,7 +85,7 @@ const template = [
       {
         label: 'About BenjaMath',
         click () {
-          vex.dialog.alert("BenjaMath is an open source math CAS based upon web technologies.");
+          vex.dialog.alert("BenjaMath is an open source math CAS based upon web technologies. Version: " + version);
         }
       }
     ]
@@ -98,7 +98,7 @@ var MathQuills = [];
 
 var editor;
 
-console.log("Welcome to BenjaMath");
+console.log("Welcome to BenjaMath " + version);
 
 /*
   Functions
