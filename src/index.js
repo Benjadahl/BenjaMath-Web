@@ -10,62 +10,86 @@ const Menu = require("electron").remote.Menu;
 const dialog = require("electron").remote.dialog;
 const fs = require("fs");
 
+var vex = require('vex-js');
+vex.registerPlugin(require('vex-dialog'));
+vex.defaultOptions.className = 'vex-theme-os';
+
+
+
 //Set up menuBar
 const template = [
-{
-  label: 'File',
-  submenu: [
-    {
-      label: 'Open',
-      accelerator: 'CmdOrCtrl+o',
-      click() {
-        var file = dialog.showOpenDialog({
-          properties: ['openFile'],
-          filters: [{name: "htmlFiles", extensions: ['html']}]
-        })[0];
-        if (typeof file !== "undefined") {
-          fs.readFile(file, "utf-8", function (err, html) {
-            CKEDITOR.instances.editor.setData(html);
-            initMathquills();
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Open',
+        accelerator: 'CmdOrCtrl+o',
+        click() {
+          var file = dialog.showOpenDialog({
+            properties: ['openFile'],
+            filters: [{name: "htmlFiles", extensions: ['html']}]
+          })[0];
+          if (typeof file !== "undefined") {
+            fs.readFile(file, "utf-8", function (err, html) {
+              CKEDITOR.instances.editor.setData(html);
+              initMathquills();
+            });
+          }
+        }
+      },
+      {
+        label: 'Save',
+        accelerator: 'CmdOrCtrl+s',
+        click() {
+          console.log('SAVE')
+        }
+      },
+      {
+        label: 'Save As...',
+        accelerator: 'CmdOrCtrl+shift+s',
+        click() {
+          revertMathQuills();
+          let editorData = CKEDITOR.instances.editor.getData();
+          var file = dialog.showSaveDialog({
+            filters: [{name: "htmlFiles", extensions: ['html']}]
+          });
+          fs.writeFile(file, editorData, function (err) {
+
           });
         }
+      },
+      {
+        label: 'Print',
+        accelerator: 'CmdOrCtrl+p',
+        click() {
+          $("#mainContainer").hide();
+          let editorContent = CKEDITOR.instances.editor.getData();
+          $("body").append("<div id='printContent'>" + editorContent + "</div>");
+          window.print();
+          $("#printContent").remove();
+          $("#mainContainer").show();
+        }
       }
-    },
-    {
-      label: 'Save',
-      accelerator: 'CmdOrCtrl+s',
-      click() {
-        console.log('SAVE')
+    ],
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Algebrite Docs',
+        click () {
+          var win = window.open("http://algebrite.org/", '_blank');
+          win.focus();
+        }
+      },
+      {
+        label: 'About BenjaMath',
+        click () {
+          vex.dialog.alert("BenjaMath is an open source math CAS based upon web technologies.");
+        }
       }
-    },
-    {
-      label: 'Save As...',
-      accelerator: 'CmdOrCtrl+shift+s',
-      click() {
-        revertMathQuills();
-        let editorData = CKEDITOR.instances.editor.getData();
-        var file = dialog.showSaveDialog({
-          filters: [{name: "htmlFiles", extensions: ['html']}]
-        });
-        fs.writeFile(file, editorData, function (err) {
-
-        });
-      }
-    },
-    {
-      label: 'Print',
-      accelerator: 'CmdOrCtrl+p',
-      click() {
-        $("#mainContainer").hide();
-        let editorContent = CKEDITOR.instances.editor.getData();
-        $("body").append("<div id='printContent'>" + editorContent + "</div>");
-        window.print();
-        $("#printContent").remove();
-        $("#mainContainer").show();
-      }
-    }
-  ]
-}
+    ]
+  }
 ];
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
@@ -211,12 +235,26 @@ $(document).ready(function () {
                 $(resultElement).html(katex.renderToString("\\, =" + RMC.simplify(mathString)));
                 break;
               case "solve":
-                variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.solve(mathString, variable)));
+                vex.dialog.prompt({
+                    message: 'Solve for variable:',
+                    placeholder: 'x',
+                    callback: function (variable) {
+                      if (variable !== false) {
+                        $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.solve(mathString, variable)));
+                      }
+                    }
+                });
                 break;
               case "fsolve":
-                variable = prompt("Solve for variable: ","x");
-                $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
+                vex.dialog.prompt({
+                  message: 'Solve for variable:',
+                  placeholder: 'x',
+                  callback: function (variable) {
+                    if (variable !== false) {
+                      $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
+                    }
+                  }
+                });
                 break;
               case "evalf":
                 $(resultElement).html(katex.renderToString("\\, \\approx" + RMC.evalf(mathString.toString())));
@@ -225,8 +263,15 @@ $(document).ready(function () {
               $(resultElement).html(katex.renderToString("\\, =" + RMC.factor(mathString)));
                 break;
               case "integral":
-                variable = prompt("Integrate with respect to varibale: ", "x");
-                $(resultElement).html(katex.renderToString("\\, =" + RMC.integral(mathString)));
+                vex.dialog.prompt({
+                  message: 'Integrate with respect to varibale:',
+                  placeholder: 'x',
+                  callback: function (variable) {
+                    if (variable !== false) {
+                      $(resultElement).html(katex.renderToString("\\, =" + RMC.integral(mathString)));
+                    }
+                  }
+                });
                 break;
             }
           },

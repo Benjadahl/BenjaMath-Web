@@ -46,8 +46,8 @@ function evalf (expr) {
 
 //Converts a latex string to regular math string
 function parseLatex (latex) {
-	latex = pullVars(latex);
-	return new AlgebraLatex(latex).toAlgebrite();
+	//latex = pullVars(latex);
+	return new AlgebraLatex(latex).toMath();
 }
 
 var parseRegexes = [
