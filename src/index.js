@@ -1,8 +1,5 @@
 var algebrite = require("algebrite");
 var katex = require("katex");
-//window.CKEDITOR_BASEPATH = './node_modules/ckeditor/';
-//require("ckeditor");
-var algebra = require("algebra.js");
 var RMC = require("./src/RendalMathCore.js");
 var MQ = MathQuill.getInterface(2);
 var electron = require("electron");
