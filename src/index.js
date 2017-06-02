@@ -4,7 +4,6 @@ var katex = require("katex");
 //require("ckeditor");
 var algebra = require("algebra.js");
 var RMC = require("./src/RendalMathCore.js");
-var fileSaver = require("file-saver");
 var MQ = MathQuill.getInterface(2);
 var electron = require("electron");
 const Menu = require("electron").remote.Menu;
@@ -20,14 +19,12 @@ const template = [
       label: 'Open',
       accelerator: 'CmdOrCtrl+o',
       click() {
-        console.log('OPENED');
         var file = dialog.showOpenDialog({
           properties: ['openFile'],
           filters: [{name: "htmlFiles", extensions: ['html']}]
         })[0];
         if (typeof file !== "undefined") {
           fs.readFile(file, "utf-8", function (err, html) {
-            console.log(html);
             CKEDITOR.instances.editor.setData(html);
             initMathquills();
           });
@@ -47,12 +44,24 @@ const template = [
       click() {
         revertMathQuills();
         let editorData = CKEDITOR.instances.editor.getData();
-        var file = dialog.showSaveDialog();
-        fs.writeFile(file, editorData, function (err) {
-          console.log("we did it");
+        var file = dialog.showSaveDialog({
+          filters: [{name: "htmlFiles", extensions: ['html']}]
         });
-        console.log(file);
-        console.log('SAVEAS');
+        fs.writeFile(file, editorData, function (err) {
+
+        });
+      }
+    },
+    {
+      label: 'Print',
+      accelerator: 'CmdOrCtrl+p',
+      click() {
+        $("#mainContainer").hide();
+        let editorContent = CKEDITOR.instances.editor.getData();
+        $("body").append("<div id='printContent'>" + editorContent + "</div>");
+        window.print();
+        $("#printContent").remove();
+        $("#mainContainer").show();
       }
     }
   ]
@@ -120,55 +129,6 @@ function revertMathQuills () {
     $(element).html(latex);
   }
 }
-
-/*
-  BUTTON EVENT
-*/
-document.getElementById("printButton").addEventListener("click", function(){
-  $("#mainContainer").hide();
-  let editorContent = CKEDITOR.instances.editor.getData();
-  $("body").append("<div id='printContent'>" + editorContent + "</div>");
-  window.print();
-  $("#printContent").remove();
-  $("#mainContainer").show();
-});
-
-//Event for the saveButton
-document.getElementById("saveButton").addEventListener("click", function(){
-  revertMathQuills();
-  let editorData = CKEDITOR.instances.editor.getData();
-  var blob = new Blob([editorData], {type: "text/plain;charset=utf-8"});
-  var projectName = prompt("Enter project name:","BenjaMath Project");
-  if(projectName !== null){
-    fileSaver.saveAs(blob, projectName + ".html");
-  }
-});
-
-//Event for the openButton
-document.getElementById("openButton").addEventListener("click", function(){
-  $("#openInput").trigger("click");
-
-});
-
-//Event for choosing new file
-document.getElementById("openInput").addEventListener("change", function(evt){
-  //Choose the first file from the list, as only one file is allowed
-  var f = evt.target.files[0];
-  //Declare a new fileReader
-  var reader = new FileReader();
-  //Set up the code for loading a file with the reader
-  reader.onload = function(e){
-    //Contents of file being read
-    var contents = e.target.result;
-    //Set the contents of the editor
-    CKEDITOR.instances.editor.setData(contents);
-    initMathquills();
-  };
-  lastUsedPath = f.path;
-  //Read the file as text and then run the onload function
-  reader.readAsText(f);
-});
-
 
 /*
   MODIFY EDITOR
