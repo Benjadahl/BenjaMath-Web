@@ -24,6 +24,14 @@ const template = [
     label: 'File',
     submenu: [
       {
+        label: 'New',
+        accelerator: 'CmdOrCtrl+n',
+        click() {
+          setLastPath("");
+          CKEDITOR.instances.editor.setData("");
+        }
+      },
+      {
         label: 'Open',
         accelerator: 'CmdOrCtrl+o',
         click() {
@@ -164,7 +172,11 @@ function saveAs () {
 
 function setLastPath (path) {
   lastPath = path;
-  document.title = "BenjaMath - " + path;
+  if (path !== "") {
+    document.title = "BenjaMath - " + path;
+  } else {
+    document.title = "BenjaMath";
+  }
 }
 
 function initMathquills () {
