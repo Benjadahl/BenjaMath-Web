@@ -14,6 +14,7 @@ vex.defaultOptions.className = 'vex-theme-os';
 var version = require("./package.json").version;
 
 var lastPath = "";
+var unsavedChangesStatus = false;
 
 //Set up menuBar
 const template = [
@@ -26,6 +27,7 @@ const template = [
         click() {
           setLastPath("");
           CKEDITOR.instances.editor.setData("");
+          unsavedChanges(false);
         }
       },
       {
@@ -41,6 +43,7 @@ const template = [
               if (!err) {
                 setLastPath(file);
                 CKEDITOR.instances.editor.setData(html);
+                unsavedChanges(false);
                 initMathquills();
               }
             });
@@ -57,6 +60,9 @@ const template = [
             revertMathQuills();
             let editorData = CKEDITOR.instances.editor.getData();
             fs.writeFile(lastPath, editorData, function (err) {
+              if (!err) {
+                unsavedChanges(false);
+              }
               console.log("Saved to " + lastPath);
             });
             initMathquills();
@@ -162,18 +168,45 @@ function saveAs () {
   fs.writeFile(file, editorData, function (err) {
     if (!err) {
       setLastPath(file);
+      unsavedChanges(false);
     }
   });
   initMathquills();
+}
+
+function docNameFromPath (path) {
+  let lastSlash = path.lastIndexOf("/");
+  let lastDot = path.lastIndexOf(".");
+
+  return path.substring(lastSlash + 1, lastDot);
 }
 
 function setLastPath (path) {
   lastPath = path;
   if (path !== "") {
     document.title = "BenjaMath - " + path;
+    $("#fileName").html(docNameFromPath(path));
   } else {
     document.title = "BenjaMath";
+    $("#fileName").html("BenjaMath");
   }
+}
+
+function unsavedChanges (status) {
+  if (!unsavedChangesStatus && status) {
+    $("#saveStatus").html($("#saveStatus").html() + "*");
+  }
+
+  unsavedChangesStatus = status;
+
+  if (unsavedChangesStatus) {
+  } else {
+    let date = new Date();
+    let hours = ("0" + date.getHours()).slice(-2);
+    let minutes = ("0" + date.getMinutes()).slice(-2);
+    $("#saveStatus").html(" " + hours + ":" + minutes);
+  }
+
 }
 
 function initMathquills () {
@@ -224,11 +257,6 @@ CKEDITOR.config.toolbar_Full =
 CKEDITOR.config.allowedContent = true;
 CKEDITOR.config.startupFocus = true;
 
-//When the toolbar disappears, just turn the event off. Yes, this is a good way to do it.
-/*CKEDITOR.inline(document.getElementById("editor")).on('blur', function(e) {
-	return false;
-});*/
-
 $(document).ready(function () {
   // We need to turn off the automatic editor creation first.
   CKEDITOR.disableAutoInline = true;
@@ -253,6 +281,10 @@ $(document).ready(function () {
     label: "Insert Equation",
     command: 'insertMathquill',
     toolbar: 'insert',
+  });
+
+  editor.on("change", function() {
+    unsavedChanges(true);
   });
 
   //Set up custom contextMenu for the mathfields
@@ -335,5 +367,8 @@ $("#editor").keydown(function (e) {
         element.innerHTML += "<span class='result' contenteditable='false'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
       }
     }
+  } else if (e.keyCode === 116) {
+    console.log("F5 was pressed");
+    //Insert quill
   }
 });

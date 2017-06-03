@@ -7,6 +7,11 @@
 
 .header {
   font-family: sans-serif;
+  display: inline;
+}
+
+#saveStatus {
+  color: #656565;
 }
 
 #buttons {
