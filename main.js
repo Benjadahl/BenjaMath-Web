@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
 const fs = require('fs');
@@ -6,6 +6,9 @@ const fs = require('fs');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+var toClose = false;
+
 
 function createWindow () {
   // Create the browser window.
@@ -21,6 +24,14 @@ function createWindow () {
   // Open the DevTools.
   win.webContents.openDevTools()
 
+  win.on("close", (event) => {
+    if (!toClose) {
+      win.webContents.send("closeRequest");
+      event.preventDefault();
+    }
+    return;
+  });
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -29,6 +40,13 @@ function createWindow () {
     win = null
   })
 }
+
+
+ipcMain.on("doClose", () => {
+  toClose = true;
+  win.close();
+});
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -34,39 +34,14 @@ const template = [
         label: 'Open',
         accelerator: 'CmdOrCtrl+o',
         click() {
-          var file = dialog.showOpenDialog({
-            properties: ['openFile'],
-            filters: [{name: "htmlFiles", extensions: ['html']}]
-          })[0];
-          if (typeof file !== "undefined") {
-            fs.readFile(file, "utf-8", function (err, html) {
-              if (!err) {
-                setLastPath(file);
-                CKEDITOR.instances.editor.setData(html);
-                unsavedChanges(false);
-                initMathquills();
-              }
-            });
-          }
+          requestOpen();
         }
       },
       {
         label: 'Save',
         accelerator: 'CmdOrCtrl+s',
         click() {
-          if (lastPath === "") {
-            saveAs();
-          } else {
-            revertMathQuills();
-            let editorData = CKEDITOR.instances.editor.getData();
-            fs.writeFile(lastPath, editorData, function (err) {
-              if (!err) {
-                unsavedChanges(false);
-              }
-              console.log("Saved to " + lastPath);
-            });
-            initMathquills();
-          }
+          save();
         }
       },
       {
@@ -159,6 +134,7 @@ function newMathQuill (element) {
   });
 }
 
+//Functions for handling files
 function saveAs () {
   revertMathQuills();
   let editorData = CKEDITOR.instances.editor.getData();
@@ -172,6 +148,63 @@ function saveAs () {
     }
   });
   initMathquills();
+}
+
+function save() {
+  if (lastPath === "") {
+    saveAs();
+  } else {
+    revertMathQuills();
+    let editorData = CKEDITOR.instances.editor.getData();
+    fs.writeFile(lastPath, editorData, function (err) {
+      if (!err) {
+        unsavedChanges(false);
+      }
+      console.log("Saved to " + lastPath);
+    });
+    initMathquills();
+  }
+}
+
+function open () {
+  var file = dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{name: "htmlFiles", extensions: ['html']}]
+  })[0];
+  if (typeof file !== "undefined") {
+    fs.readFile(file, "utf-8", function (err, html) {
+      if (!err) {
+        setLastPath(file);
+        CKEDITOR.instances.editor.setData(html);
+        unsavedChanges(false);
+        initMathquills();
+      }
+    });
+  }
+}
+
+function requestOpen() {
+  if (!unsavedChangesStatus) {
+    open();
+  } else {
+    unsavedChangesDialog( (button) => {
+      if (button === 1 || button === 2) {
+        open();
+      }
+    });
+  }
+}
+
+function unsavedChangesDialog (callback) {
+  dialog.showMessageBox({
+    message: "You have unsaved changes, how do you want to proceed?",
+    buttons: ["Cancel", "Save changes", "Do not save changes"]
+  }, (response) => {
+    if (response === 1) {
+      save();
+    }
+    callback(response);
+  });
 }
 
 function docNameFromPath (path) {
@@ -370,5 +403,22 @@ $("#editor").keydown(function (e) {
   } else if (e.keyCode === 116) {
     console.log("F5 was pressed");
     //Insert quill
+  }
+});
+
+electron.ipcRenderer.on("closeRequest", function () {
+  if (unsavedChangesStatus) {
+    unsavedChangesDialog((button) => {
+      switch (button) {
+        case 1:
+          electron.ipcRenderer.send("doClose");
+          break;
+        case 2:
+          electron.ipcRenderer.send("doClose");
+          break;
+      }
+    });
+  } else {
+    electron.ipcRenderer.send("doClose");
   }
 });
