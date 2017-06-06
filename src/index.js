@@ -91,6 +91,18 @@ const template = [
     ]
   },
   {
+    label: 'Insert',
+    submenu: [
+      {
+        label: 'Insert Math',
+        accelerator: 'f5',
+        click () {
+          CKEDITOR.instances.editor.execCommand("insertMathquill");
+        }
+      }
+    ]
+  },
+  {
     label: 'Help',
     submenu: [
       {
@@ -421,9 +433,6 @@ $("#editor").keydown(function (e) {
         element.innerHTML += "<span class='result' contenteditable='false'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
       }
     }
-  } else if (e.keyCode === 116) {
-    console.log("F5 was pressed");
-    //Insert quill
   }
 });
 
