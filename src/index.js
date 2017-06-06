@@ -66,18 +66,43 @@ const template = [
     ],
   },
   {
+    label: 'Edit',
+    submenu: [
+      {
+        label: 'Undo',
+        accelerator: 'CmdOrCtrl+z',
+        click() {
+          //Currently does not work
+          revertMathQuills();
+          //CKEDITOR.instances.editor.execCommand("undo");
+          initMathquills();
+        }
+      },
+      {
+        label: 'Redo',
+        accelerator: 'CmdOrCtrl+shift+z',
+        click() {
+          //Currently does not work
+          revertMathQuills();
+          //CKEDITOR.instances.editor.execCommand("redo");
+          initMathquills();
+        }
+      }
+    ]
+  },
+  {
     label: 'Help',
     submenu: [
       {
         label: 'Algebrite Docs',
-        click () {
+        click() {
           var win = window.open("http://algebrite.org/", '_blank');
           win.focus();
         }
       },
       {
         label: 'About BenjaMath',
-        click () {
+        click() {
           vex.dialog.alert("BenjaMath is an open source math CAS based upon web technologies. Version: " + version);
         }
       }
@@ -138,16 +163,19 @@ function newMathQuill (element) {
 function saveAs () {
   revertMathQuills();
   let editorData = CKEDITOR.instances.editor.getData();
-  var file = dialog.showSaveDialog({
-    filters: [{name: "htmlFiles", extensions: ['html']}]
-  });
-  fs.writeFile(file, editorData, function (err) {
-    if (!err) {
-      setLastPath(file);
-      unsavedChanges(false);
-    }
-  });
-  initMathquills();
+  try {
+    var file = dialog.showSaveDialog({
+      filters: [{name: "htmlFiles", extensions: ['html']}]
+    });
+    fs.writeFile(file, editorData, function (err) {
+      if (!err) {
+        setLastPath(file);
+        unsavedChanges(false);
+      }
+    });
+  } finally {
+    initMathquills();
+  }
 }
 
 function save() {
@@ -271,20 +299,13 @@ CKEDITOR.config.bodyClass = 'document-editor';
 
 CKEDITOR.config.toolbar_Full =
 [
-	{ name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
-	{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+  { name: 'math', items: ["mathQuill"] },
+  { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+  { name: 'styles', items : [ 'Format' ] },
+  { name: 'insert', items : [ 'Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
+  { name: 'links', items : [ 'Link','Unlink' ] },
 	{ name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
-	{ name: 'forms', items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
-        'HiddenField' ] },
-	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-	{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
-	'-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
-	{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
-	{ name: 'math', items: ["mathQuill", "mathSection"] },
-	{ name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
-	{ name: 'colors', items : [ 'TextColor','BGColor' ] },
-	{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
+	{ name: 'colors', items : [ 'TextColor','BGColor' ] }
 ];
 
 CKEDITOR.config.allowedContent = true;
