@@ -55,12 +55,12 @@ const template = [
         label: 'Print',
         accelerator: 'CmdOrCtrl+p',
         click() {
-          $("#mainContainer").hide();
-          let editorContent = CKEDITOR.instances.editor.getData();
-          $("body").append("<div id='printContent'>" + editorContent + "</div>");
-          window.print();
-          $("#printContent").remove();
-          $("#mainContainer").show();
+          $(".header").hide();
+          $("#editor").blur();
+          setTimeout(function() {
+            window.print();
+            $(".header").show();
+          }, 500);
         }
       }
     ],
