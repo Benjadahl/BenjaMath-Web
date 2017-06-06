@@ -355,68 +355,68 @@ $(document).ready(function () {
 
   //Set up custom contextMenu for the mathfields
   $(function() {
-      $.contextMenu({
-          selector: '.mathField',
-          callback: function(key, options) {
-            let mathQuill = MathQuills[$(this).attr("id")];
-            let latex = mathQuill.latex();
-            let mathString = RMC.parseLatex(latex);
-            let resultElement = $(this).parent().find("#result");
-            let variable;
-            switch (key) {
-              case "simplify":
-                $(resultElement).html(katex.renderToString("\\, =" + RMC.simplify(mathString)));
-                break;
-              case "solve":
-                vex.dialog.prompt({
-                    message: 'Solve for variable:',
-                    placeholder: 'x',
-                    callback: function (variable) {
-                      if (variable !== false) {
-                        $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.solve(mathString, variable)));
-                      }
-                    }
-                });
-                break;
-              case "fsolve":
-                vex.dialog.prompt({
-                  message: 'Solve for variable:',
-                  placeholder: 'x',
-                  callback: function (variable) {
-                    if (variable !== false) {
-                      $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
-                    }
+    $.contextMenu({
+      selector: '.mathField',
+      callback: function(key, options) {
+        let mathQuill = MathQuills[$(this).attr("id")];
+        let latex = mathQuill.latex();
+        let mathString = RMC.parseLatex(latex);
+        let resultElement = $(this).parent().find("#result");
+        let variable;
+        switch (key) {
+          case "simplify":
+            $(resultElement).html(katex.renderToString("\\, =" + RMC.simplify(mathString)));
+            break;
+          case "solve":
+            vex.dialog.prompt({
+                message: 'Solve for variable:',
+                placeholder: 'x',
+                callback: function (variable) {
+                  if (variable !== false) {
+                    $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.solve(mathString, variable)));
                   }
-                });
-                break;
-              case "evalf":
-                $(resultElement).html(katex.renderToString("\\, \\approx" + RMC.evalf(mathString.toString())));
-                break;
-              case "factor":
-              $(resultElement).html(katex.renderToString("\\, =" + RMC.factor(mathString)));
-                break;
-              case "integral":
-                vex.dialog.prompt({
-                  message: 'Integrate with respect to varibale:',
-                  placeholder: 'x',
-                  callback: function (variable) {
-                    if (variable !== false) {
-                      $(resultElement).html(katex.renderToString("\\, =" + RMC.integral(mathString)));
-                    }
-                  }
-                });
-                break;
-            }
-          },
-          items: {
-              "simplify": {name: "Simplify", icon: "fa-pie-chart"},
-              "solve": {name: "Solve", icon: "fa-asterisk"},
-              "fsolve": {name: "Fsolve", icon: "fa-cogs"},
-              "evalf": {name: "Evalf", icon:"fa-bolt"},
-              "factor": {name: "Factor", icon: "fa-plus-square-o"},
-              "integral": {name: "Integral", icon: "fa-line-chart"}
-          }
-      });
+                }
+            });
+            break;
+          case "fsolve":
+            vex.dialog.prompt({
+              message: 'Solve for variable:',
+              placeholder: 'x',
+              callback: function (variable) {
+                if (variable !== false) {
+                  $(resultElement).html(katex.renderToString("\\, \\longrightarrow " + variable + " = " + RMC.fsolve(mathString, variable)));
+                }
+              }
+            });
+            break;
+          case "evalf":
+            $(resultElement).html(katex.renderToString("\\, \\approx" + RMC.evalf(mathString.toString())));
+            break;
+          case "factor":
+          $(resultElement).html(katex.renderToString("\\, =" + RMC.factor(mathString)));
+            break;
+          case "integral":
+            vex.dialog.prompt({
+              message: 'Integrate with respect to varibale:',
+              placeholder: 'x',
+              callback: function (variable) {
+                if (variable !== false) {
+                  $(resultElement).html(katex.renderToString("\\, =" + RMC.integral(mathString)));
+                }
+              }
+            });
+            break;
+        }
+      },
+      items: {
+          "simplify": {name: "Simplify", icon: "fa-pie-chart"},
+          "solve": {name: "Solve", icon: "fa-asterisk"},
+          "fsolve": {name: "Fsolve", icon: "fa-cogs"},
+          "evalf": {name: "Evalf", icon:"fa-bolt"},
+          "factor": {name: "Factor", icon: "fa-plus-square-o"},
+          "integral": {name: "Integral", icon: "fa-line-chart"}
+      }
+    });
   });
 });
 
@@ -430,7 +430,7 @@ $("#editor").keydown(function (e) {
       if ($(element).children(".result").length > 0) {
         $(element).find(".result").html(katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()));
       } else {
-        element.innerHTML += "<span class='result' contenteditable='false'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
+        element.innerHTML += "<span class='result'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
       }
     }
   }
