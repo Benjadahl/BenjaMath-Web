@@ -305,7 +305,7 @@ $(document).ready(function () {
   editor.addCommand( 'insertMathquill', {
     exec: function( editor ) {
       let id = MathQuills.length;
-      editor.insertHtml('<p>&#8291<span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span id="result">&nbsp;</span><span>&nbsp;</span></p>');
+      editor.insertHtml('<p>&#8291<span><span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span id="result">&nbsp;</span><span>&nbsp;</span></span></p>');
       newMathQuill(document.getElementById(id));
     }
   });
