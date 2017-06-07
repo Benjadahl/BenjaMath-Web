@@ -286,10 +286,65 @@ function revertMathQuills () {
   }
 }
 
+function updateStyle () {
+  let currentNodeName = $(document.getSelection().focusNode).parent().prop("nodeName");
+  if (currentNodeName === "DIV" || currentNodeName === "SPAN") {
+    currentNodeName = "P";
+  }
+  $("#style").val(currentNodeName);
+}
+
+/*function updateJustify () {
+  let element = $(document.getSelection().focusNode);
+  while (true) {
+    let justify = $(element).css("text-align");
+    if ($(element).attr("id") !== "editor") {
+      if (justify !== "start") {
+        console.log(justify);
+        break;
+      } else {
+        element = $(element).parent();
+      }
+    } else {
+      break;
+    }
+  }
+}*/
+
 $(document).ready(function () {
   document.getElementById("editor").addEventListener("input", function() {
     unsavedChanges(true);
   }, false);
+
+  $("#justify").on("change", function () {
+    document.execCommand($("#justify :selected").val(), false);
+  });
+
+  $("#style").on("change", function() {
+    document.execCommand("formatBlock", false, $("#style :selected").val());
+  });
+
+  //Buttons
+  $("#bold").click(function() {
+    document.execCommand("bold", false);
+  });
+
+  $("#italic").click(function () {
+    document.execCommand("italic", false);
+  });
+
+  $("#editor").keydown(function () {
+    setTimeout(function() {
+      updateStyle();
+      //updateJustify();
+    }, 0);
+  });
+
+  $("#editor").click(function () {
+    setTimeout(function() {
+      updateStyle();
+    }, 0);
+  });
 
   //Set up custom contextMenu for the mathfields
   $(function() {

@@ -27,24 +27,33 @@
 	<body>
 		<div id="mainContainer">
 				<div id="editorContainer">
-					<h1 class="header" id="fileName">BenjaMath</h1>
-					<h3 class="header" id="saveStatus"></h3>
-					<div id="editor" contenteditable="true">TEST</div>
+					<div id="documentTitle">
+						<h1 class="header" id="fileName">BenjaMath</h1>
+						<h3 class="header" id="saveStatus"></h3>
+					</div>
+					<div id="document">
+						<div id="settings">
+							Justify:
+							<select id="justify">
+								<option value="justifyLeft">Left</option>
+								<option value="justifyCenter">Center</option>
+								<option value="justifyRight">Right</option>
+								<option value="justifyFull">Full</option>
+							</select>
+							<button class="buttons" id="bold">Bold</button>
+							<button class="buttons" id="italic">Italic</button>
+							<select id="style">
+								<option value="P">Text</option>
+								<option value="PRE">Script</option>
+								<option value="H1">Header 1</option>
+								<option value="H2">Header 2</option>
+								<option value="H3">Header 3</option>
+								<option value="H4">Header 4</option>
+							</select>
+						</div>
+						<div id="editor" contenteditable="true">TEST</div>
+					</div>
 				</div>
-				<!--
-				<div id="variables">
-					<table>
-						<thead>
-							<tr>
-								<th>Variable</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-			-->
 		</div>
 		<script src="src/index.js"></script>
 	</body>

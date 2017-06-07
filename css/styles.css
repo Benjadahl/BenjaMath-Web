@@ -1,10 +1,3 @@
-#editorContainer {
-}
-
-#editor {
-  margin-top: 75px;
-}
-
 .header {
   font-family: sans-serif;
   display: inline;
@@ -14,22 +7,17 @@
   color: #656565;
 }
 
-#buttons {
-  display: inline;
-}
-
 #editor {
+  margin-top: 7px;
   border: solid 1px grey;
-  padding-left:10px;
+  padding-left: 10px;
   height: 78vh;
 }
 
-div#variables {
-	width: 15%;
-	margin-top: 5%;
-	float: right;
+#document {
+  margin-top: 50px;
 }
 
-#openInput {
-  display: none;
+.buttons {
+  display: inline;
 }
