@@ -29,7 +29,6 @@
   "dependencies": {
     "algebra-latex": "^0.4.4",
     "algebrite": "^1.0.2",
-    "ckeditor": "^4.7.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "jquery-contextmenu": "^2.5.0",

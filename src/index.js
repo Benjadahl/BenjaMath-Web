@@ -26,7 +26,7 @@ const template = [
         accelerator: 'CmdOrCtrl+n',
         click() {
           setLastPath("");
-          CKEDITOR.instances.editor.setData("");
+          $("#editor").html();
           unsavedChanges(false);
         }
       },
@@ -97,7 +97,7 @@ const template = [
         label: 'Insert Math',
         accelerator: 'f5',
         click () {
-          CKEDITOR.instances.editor.execCommand("insertMathquill");
+          insertMathquill();
         }
       }
     ]
@@ -140,7 +140,7 @@ function renderMathBox(id) {
 }
 
 function newMathQuill (element) {
-  MathQuills.push(MQ.MathField(element).select().focus());
+  MathQuills.push(MQ.MathField(element).focus());
   let currentQuill = MathQuills[MathQuills.length - 1];
   $(currentQuill.el()).keydown(function(e) {
     if (e.keyCode == 13) {
@@ -148,33 +148,18 @@ function newMathQuill (element) {
       renderMathBox(id);
     }
   });
-  //Pretty bad hack - it makes the box editable and empty
-  setTimeout(function(){
-    currentQuill.clearSelection();
-    if (currentQuill.latex() === "placeholder") {
-      currentQuill.latex("");
-    }
-  }, 200);
+}
 
-  //Also hack when clicked
-  currentQuill.el().addEventListener("click", function(){
-    if (currentQuill.latex() === "") {
-      currentQuill.latex("placeholder");
-    }
-    currentQuill.select();
-    setTimeout(function(){
-      currentQuill.clearSelection();
-      if (currentQuill.latex() === "placeholder") {
-        currentQuill.latex("");
-      }
-    }, 200);
-  });
+function insertMathquill () {
+  let id = MathQuills.length;
+  document.execCommand("insertHTML", false, '<p>&#8291<span id="mathAndResult"><span class="mathField" id="' + id + '" contenteditable="false"></span><span id="result">&nbsp;</span><span>&nbsp;</span></span></p>');
+  newMathQuill(document.getElementById(id));
 }
 
 //Functions for handling files
 function saveAs () {
   revertMathQuills();
-  let editorData = CKEDITOR.instances.editor.getData();
+  let editorData = $("#editor").html();
   try {
     var file = dialog.showSaveDialog({
       filters: [{name: "htmlFiles", extensions: ['html']}]
@@ -195,7 +180,7 @@ function save() {
     saveAs();
   } else {
     revertMathQuills();
-    let editorData = CKEDITOR.instances.editor.getData();
+    let editorData = $("#editor").html();
     fs.writeFile(lastPath, editorData, function (err) {
       if (!err) {
         unsavedChanges(false);
@@ -215,7 +200,7 @@ function open () {
     fs.readFile(file, "utf-8", function (err, html) {
       if (!err) {
         setLastPath(file);
-        CKEDITOR.instances.editor.setData(html);
+        $("#editor").html(html);
         unsavedChanges(false);
         initMathquills();
       }
@@ -301,57 +286,10 @@ function revertMathQuills () {
   }
 }
 
-/*
-  MODIFY EDITOR
-*/
-
-CKEDITOR.config.toolbar = 'Full';
-
-CKEDITOR.config.bodyClass = 'document-editor';
-
-CKEDITOR.config.toolbar_Full =
-[
-  { name: 'math', items: ["mathQuill"] },
-  { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-  { name: 'styles', items : [ 'Format' ] },
-  { name: 'insert', items : [ 'Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
-  { name: 'links', items : [ 'Link','Unlink' ] },
-	{ name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
-	{ name: 'colors', items : [ 'TextColor','BGColor' ] }
-];
-
-CKEDITOR.config.allowedContent = true;
-CKEDITOR.config.startupFocus = true;
-
 $(document).ready(function () {
-  // We need to turn off the automatic editor creation first.
-  CKEDITOR.disableAutoInline = true;
-
-  CKEDITOR.inline("editor", {
-    format_tags: 'p;script;h1;h2;h3',
-    format_script: {name: "Scripting", element: "pre"}
-  });
-  $("#editor").attr("contenteditable","true");
-
-  editor = CKEDITOR.instances.editor;
-
-  editor.addCommand( 'insertMathquill', {
-    exec: function( editor ) {
-      let id = MathQuills.length;
-      editor.insertHtml('<p>&#8291<span><span class="mathField" id="' + id + '" contenteditable="false">placeholder</span><span id="result">&nbsp;</span><span>&nbsp;</span></span></p>');
-      newMathQuill(document.getElementById(id));
-    }
-  });
-
-  editor.ui.addButton("mathQuill", {
-    label: "Insert Equation",
-    command: 'insertMathquill',
-    toolbar: 'insert',
-  });
-
-  editor.on("change", function() {
+  document.getElementById("editor").addEventListener("input", function() {
     unsavedChanges(true);
-  });
+  }, false);
 
   //Set up custom contextMenu for the mathfields
   $(function() {
