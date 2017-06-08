@@ -152,7 +152,7 @@ function newMathQuill (element) {
 
 function insertMathquill () {
   let id = MathQuills.length;
-  document.execCommand("insertHTML", false, '<p>&#8291<span id="mathAndResult"><span class="mathField" id="' + id + '" contenteditable="false"></span><span id="result">&nbsp;</span><span>&nbsp;</span></span></p>');
+  document.execCommand("insertHTML", false, '<p>&#8291<span id="mathAndResult"><span class="mathField" id="' + id + '" contenteditable="false"></span><span id="result">&nbsp;</span></span>&nbsp;</p>');
   newMathQuill(document.getElementById(id));
 }
 
@@ -340,7 +340,22 @@ $(document).ready(function () {
     document.execCommand("italic", false);
   });
 
-  $("#editor").keydown(function () {
+  $("#editor").keydown(function (e) {
+    if (e.altKey && e.keyCode === 13) {
+      let element = $(document.getSelection().focusNode).parent();
+      if ($(element).prop("nodeName") === "PRE") {
+        let scriptingText = $(element).clone().children().remove().end().text();
+        if ($(element).children(".result").length > 0) {
+          $(element).find(".result").html(katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()));
+        } else {
+          $(element).html($(element).html() + "<span class='result'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>");
+        }
+      }
+    } else if (e.keyCode === 13) {
+      setTimeout(function() {
+        document.execCommand("formatBlock", false, "P");
+      }, 0);
+    }
     setTimeout(function() {
       updateStyle();
       updateJustify();
@@ -419,22 +434,6 @@ $(document).ready(function () {
       }
     });
   });
-});
-
-parser = new DOMParser();
-
-$("#editor").keydown(function (e) {
-  if (e.altKey && e.keyCode === 13) {
-    let element = $(document.getSelection().focusNode).parent();
-    if ($(element).prop("nodeName") === "PRE") {
-      let scriptingText = $(element).clone().children().remove().end().text();
-      if ($(element).children(".result").length > 0) {
-        $(element).find(".result").html(katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()));
-      } else {
-        $(element).html($(element).html() + "<span class='result'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>");
-      }
-    }
-  }
 });
 
 electron.ipcRenderer.on("closeRequest", function () {
