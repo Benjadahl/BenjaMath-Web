@@ -294,13 +294,19 @@ function updateStyle () {
   $("#style").val(currentNodeName);
 }
 
-/*function updateJustify () {
-  let element = $(document.getSelection().focusNode);
+function updateJustify () {
+  var element = $(document.getSelection().focusNode).parent();
+  let value = "justifyLeft";
   while (true) {
     let justify = $(element).css("text-align");
     if ($(element).attr("id") !== "editor") {
       if (justify !== "start") {
-        console.log(justify);
+        if (justify === "justify") {
+          justify = "Full";
+        } else {
+          justify = justify.charAt(0).toUpperCase() + justify.slice(1);
+        }
+        value = "justify" + justify;
         break;
       } else {
         element = $(element).parent();
@@ -309,7 +315,8 @@ function updateStyle () {
       break;
     }
   }
-}*/
+  $("#justify").val(value);
+}
 
 $(document).ready(function () {
   document.getElementById("editor").addEventListener("input", function() {
@@ -336,13 +343,14 @@ $(document).ready(function () {
   $("#editor").keydown(function () {
     setTimeout(function() {
       updateStyle();
-      //updateJustify();
+      updateJustify();
     }, 0);
   });
 
   $("#editor").click(function () {
     setTimeout(function() {
       updateStyle();
+      updateJustify();
     }, 0);
   });
 
