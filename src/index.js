@@ -103,6 +103,25 @@ const template = [
     ]
   },
   {
+    label: 'Format',
+    submenu: [
+      {
+        label: 'Bold',
+        accelerator: 'CmdOrCtrl+b',
+        click () {
+          document.execCommand("bold", false);
+        }
+      },
+      {
+        label: 'Italic',
+        accelerator: 'CmdOrCtrl+i',
+        click () {
+          document.execCommand("italic", false);
+        }
+      }
+    ]
+  },
+  {
     label: 'Help',
     submenu: [
       {
