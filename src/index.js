@@ -425,13 +425,13 @@ parser = new DOMParser();
 
 $("#editor").keydown(function (e) {
   if (e.altKey && e.keyCode === 13) {
-    let element = editor.getSelection().getStartElement().$;
-    if (element.tagName === "PRE") {
+    let element = $(document.getSelection().focusNode).parent();
+    if ($(element).prop("nodeName") === "PRE") {
       let scriptingText = $(element).clone().children().remove().end().text();
       if ($(element).children(".result").length > 0) {
         $(element).find(".result").html(katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()));
       } else {
-        element.innerHTML += "<span class='result'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>";
+        $(element).html($(element).html() + "<span class='result'>" + katex.renderToString(" = " + algebrite.eval(scriptingText).toLatexString()) + "</span>");
       }
     }
   }
